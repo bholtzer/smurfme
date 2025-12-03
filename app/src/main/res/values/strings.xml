@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Smurf4U</string>
+    <string name="selected_smurf">Selected Smurf</string>
+    <string name="choose_your_smurf_image">Photo</string>
+    <string name="smurf_image">Smurf Image</string>
+    <string name="smurf_me">Smurf Me</string>
+    <string name="title_activity_smurfify_screen">SmurfifyScreen</string>
+</resources>

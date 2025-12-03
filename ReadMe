@@ -1,0 +1,14 @@
+UI (ViewModel)
+↓
+Domain (UseCases)
+↓
+Data (Repository)
+
+Layer	Responsibility
+domain	Core business rules (pure Kotlin, no Android imports)
+data	Implements repositories, connects to Firebase + API
+presentation	UI (Compose), ViewModels, Navigation
+app/di	Hilt setup, dependency wiring
+
+The ViewModel doesn’t know where the data comes from (Firebase, API, etc.),
+it just calls getAllSmurfs() or smurfImage(url).

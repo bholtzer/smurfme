@@ -1,0 +1,12 @@
+package com.bih.applicationsmurfforyou.presentation.explore
+
+import com.bih.applicationsmurfforyou.domain.model.Smurf
+
+sealed class ExploreUiState {
+    object Idle : ExploreUiState()
+    object Loading : ExploreUiState()
+    data class Loaded(val smurfs: List<Smurf>) : ExploreUiState()
+    data class Error(val message: String) : ExploreUiState()
+ }
+
+

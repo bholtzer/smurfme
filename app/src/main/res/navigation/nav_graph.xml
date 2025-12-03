@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph.xml">
+
+    <fragment
+        android:id="@+id/smurfDisplayFragment"
+        android:name="com.example.smurfs.SmurfDisplayFragment"
+        android:label="Smurf Display" />
+    <fragment
+        android:id="@+id/makeYourSmurfFragment"
+        android:name="com.example.smurfs.MakeYourSmurfFragment"
+        android:label="Make Your Smurf" />
+
+</navigation>
