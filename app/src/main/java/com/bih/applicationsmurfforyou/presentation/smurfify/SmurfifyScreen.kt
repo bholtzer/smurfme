@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -22,7 +23,8 @@ fun SmurfifyScreen(
     viewModel: SmurfifyViewModel = hiltViewModel(),
     onBack: () -> Boolean
 ) {
-    val uiState = viewModel.uiState
+    //  val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
 
     var description by remember { mutableStateOf("") }
 
@@ -38,20 +40,37 @@ fun SmurfifyScreen(
             style = MaterialTheme.typography.headlineMedium
         )
 
+        Spacer(modifier = Modifier.height(2.dp))
+        Row {
+            Button(
+                onClick = {
+                    onBack()
+                }
+            ) {
+                Text("Back ")
+            }
 
+            Button(
+                onClick = {
+                    viewModel.generateSmurf(description)
+                },
+                enabled = uiState !is SmurfifyUiState.Loading
+            ) {
+                Text("Make me as a Smurf")
+            }
+            Spacer(modifier = Modifier.width(4.dp))
+            Button(
+                onClick = {
+                    viewModel.generateSmurf(description)
+                },
+                enabled = uiState !is SmurfifyUiState.Loading
+            ) {
+                Text("Create Smurf")
+            }
+            Spacer(modifier = Modifier.width(4.dp))
 
-
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = { viewModel.createSmurf(description) },
-            enabled = uiState !is SmurfifyUiState.Loading
-        ) {
-            Text("Create Smurf")
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
+       // Spacer(modifier = Modifier.height(24.dp))
 
         when (uiState) {
             is SmurfifyUiState.Idle -> {
@@ -64,29 +83,29 @@ fun SmurfifyScreen(
 
             is SmurfifyUiState.Error -> {
                 Text(
-                    text = uiState.message,
+                    text = (uiState as SmurfifyUiState.Error).message,
                     color = MaterialTheme.colorScheme.error
                 )
             }
 
             is SmurfifyUiState.Success -> {
-                SmurfImageView(bitmap = uiState.bitmap)
+                SmurfImageView(bitmap = (uiState as SmurfifyUiState.Success).bitmap)
+
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        BasicTextField(
-
-            value = description,
-            onValueChange = { description = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 80.dp),
-            textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
-        )
     }
+    Spacer(modifier = Modifier.height(16.dp))
+
+    BasicTextField(
+        value = description,
+        onValueChange = { description = it },
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 80.dp).background(color = Color.LightGray),
+        textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+    )
 }
+
 
 
 @Composable
