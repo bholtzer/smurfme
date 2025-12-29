@@ -4,8 +4,12 @@ package com.bih.applicationsmurfforyou.presentation.smurfify
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bih.applicationsmurfforyou.data.ai.ImagenModelConfiguration
- import com.bih.applicationsmurfforyou.data.repository.ImagenRepository
+import com.bih.applicationsmurfforyou.data.repository.ImagenRepository
+import com.google.firebase.Firebase
+import com.google.firebase.ai.ai
+import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.asImageOrNull
+import com.google.firebase.ai.type.content
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,19 +29,41 @@ class SmurfifyViewModel @Inject constructor(
             try {
                 _uiState.value = SmurfifyUiState.Loading
 
-                val model = ImagenModelConfiguration.model
-
-                val imageResponse = model.generateImages(
-                    prompt =  if(text.isEmpty())
-                         "A hyper realistic picture of a t-rex with a blue bagpack in a prehistoric forest"
-                    else text,
-
+              //  val model = ImagenModelConfiguration.model
+                val model = Firebase.ai(
+                    backend = GenerativeBackend.googleAI()
+                ).generativeModel(
+                    modelName = "gemini-2.0-flash"
                 )
 
-                val image = imageResponse.images.first()
-                val bitmapImage = image.asBitmap()
 
-                _uiState.value = SmurfifyUiState.Success(bitmapImage)
+                val prompt = content {
+                    text(
+                        """
+                      Transform the person in the image into a cartoon Smurf character.
+                    Preserve facial expression, identity, and head pose.
+                    Apply smooth blue cartoon skin and a classic white Smurf hat.
+                  Keep the same hairstyle and face shape.
+                   Cartoon illustration style with clean outlines and soft shading.
+                   Do not change the background.
+                    """
+                    )
+                }
+
+                val response = model.generateContent(prompt)
+                val imageBitmap = response.candidates
+                    .firstOrNull()
+                    ?.content
+                    ?.parts
+                    ?.firstNotNullOfOrNull { it.asImageOrNull() }
+                    ?: throw IllegalStateException("No image returned")
+
+
+
+               // val image = imageResponse.images.first()
+               // val bitmapImage = image.asBitmap()
+
+                _uiState.value = SmurfifyUiState.Success(imageBitmap)
 
             } catch (e: Exception) {
                 Log.e("SmurfifyViewModel", "generateSmurf error: ${e.message}")

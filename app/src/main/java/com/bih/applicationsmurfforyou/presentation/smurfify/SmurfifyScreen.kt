@@ -89,7 +89,7 @@ fun SmurfifyScreen(
             }
 
             is SmurfifyUiState.Success -> {
-                SmurfImageView(bitmap = (uiState as SmurfifyUiState.Success).bitmap)
+                (uiState as SmurfifyUiState.Success).bitmap?.let { SmurfImageView(bitmap = it) }
 
             }
         }

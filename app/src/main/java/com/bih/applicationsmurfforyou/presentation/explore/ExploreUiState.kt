@@ -7,6 +7,8 @@ sealed class ExploreUiState {
     object Loading : ExploreUiState()
     data class Loaded(val smurfs: List<Smurf>) : ExploreUiState()
     data class Error(val message: String) : ExploreUiState()
+
+
  }
 
 

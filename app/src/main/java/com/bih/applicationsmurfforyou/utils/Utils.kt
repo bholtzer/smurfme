@@ -11,6 +11,11 @@ import java.io.File
 import java.io.IOException
 import kotlin.math.max
 import androidx.core.net.toUri
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.util.UUID
 
 object Utils {
 
@@ -89,5 +94,25 @@ object Utils {
         val file = File.createTempFile("scaled_", ".jpg", context.cacheDir)
         file.outputStream().use { out.compress(Bitmap.CompressFormat.JPEG, 90, it) }
         return file
+    }
+
+     suspend fun uploadToFirebase(context: Context, uri: Uri): String = withContext(Dispatchers.IO) {
+        try {
+            val storage = FirebaseStorage.getInstance().reference
+            val fileName = "uploads/${UUID.randomUUID()}.jpg"
+            val fileRef = storage.child(fileName)
+
+            val inputStream = context.contentResolver.openInputStream(uri)
+                ?: throw IllegalStateException("Cannot open input stream")
+
+            fileRef.putStream(inputStream).await()
+            inputStream.close()
+
+            return@withContext fileRef.downloadUrl.await().toString()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
     }
 }

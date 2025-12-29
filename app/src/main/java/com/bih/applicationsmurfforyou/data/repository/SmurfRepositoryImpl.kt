@@ -1,12 +1,9 @@
 package com.bih.applicationsmurfforyou.data.repository
 
-import android.R.attr.prompt
 import android.util.Log
 import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.domain.repository.SmurfRepository
 import com.google.firebase.storage.FirebaseStorage
-import com.google.mediapipe.framework.MediaPipeException
-import com.google.mediapipe.tasks.vision.imagegenerator.ImageGenerator
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -14,23 +11,21 @@ import javax.inject.Inject
 class SmurfRepositoryImpl @Inject constructor(
     private val firebaseStorage: FirebaseStorage
 
-) : SmurfRepository {
+){//} : SmurfRepository {
 
-    override suspend fun getAllSmurfs(): List<Smurf> {
+
+
+  /*  suspend fun getAllSmurfsCached(): List<Smurf> {
+        val cached = localDataSource.getSmurfs()
+        if (cached.isNotEmpty()) return cached
+
+        val remote = remoteDataSource.fetchSmurfs()
+        localDataSource.saveSmurfs(remote)
+        return remote
+    }*/
+
+    suspend fun getAllSmurfs(): List<Smurf> {
         val smurfImagesRef = firebaseStorage.reference.child("smurfs")
-
-        // Prepare input
-     //   val mpImage = ImageGenerator.createImage(inputBitmap) // Or use a plugin for condition image
-    /*    val generationOptions = ImageGenerator.ImageGeneratorOptions.builder()
-            .setPrompt(prompt)
-            // Add conditional inputs if using a specific img2img model/plugin
-            .build()*/
-
-// Generate the new image
-    //    val result = imageGenerator.generate(mpImage, generationOptions)
-
-// Get the output bitmap from the result
-      //  val generatedBitmap = result.generatedImage().bitmap()
 
         return try {
             val result = smurfImagesRef.listAll().await()
@@ -54,7 +49,7 @@ class SmurfRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun smurfImage(imageUrl: String): String {
+    suspend fun smurfImage(imageUrl: String): String {
         TODO("Not yet implemented")
     }
 

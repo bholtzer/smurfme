@@ -1,7 +1,5 @@
 package com.bih.applicationsmurfforyou.domain.util
 
-import com.bih.applicationsmurfforyou.presentation.smurfify.SmurfUiState
-
 /*sealed class Result<out T> {
     object Idle : Result<Nothing>()
     object Loading : Result<Nothing>()

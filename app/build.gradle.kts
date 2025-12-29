@@ -9,13 +9,9 @@ plugins {
 
 }
 
-//var openAiKey: String by project
-
 android {
     namespace = "com.bih.applicationsmurfforyou"
     compileSdk = 35
-    //val openAiKey = "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"
-    val openAiKey = "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"
     android.buildFeatures.buildConfig = true
 
     defaultConfig {
@@ -26,11 +22,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
-        buildConfigField("String", "REPLICATE_API_TOKEN", "\"${project.findProperty("REPLICATE_API_TOKEN") ?: ""}\"")
-
-      //  buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
 
     }
     buildFeatures {
@@ -57,6 +48,10 @@ android {
     packaging {
         resources {
             excludes += "META-INF/*"
+
+            pickFirsts += setOf(
+                "mozilla/public-suffix-list.txt"
+            )
         }
     }
 
@@ -75,26 +70,44 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.firebase.ai)
+    implementation(platform(libs.firebase.bom))
 
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.firebase.appcheck.playintegrity)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.database.ktx)
     implementation(libs.androidx.ui.tooling.preview.android)
-    kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.google.cloud.vertexai)
+
+    implementation(platform(libs.firebase.bom))      // you already have this
+
+    implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite.support)
+
+
+    // For handling images
+    implementation(libs.androidx.core.ktx.v1150)
+    implementation(libs.coil)
+
+    kapt(libs.dagger.hilt.compiler)
 
     //AI
      implementation(libs.tasks.vision.image.generator)
 
+    // Import the BoM for the Firebase platform
+  //  implementation(libs.firebase.bom.v3460)
+
+
+    // Add the dependency for the Firebase AI Logic library. When using the BoM,
+    // you don't specify versions in Firebase library dependencies
+    //implementation(libs.firebase.ai)
+
     implementation(libs.ktor.client.serialization)
     implementation(libs.ktor.client.android)
-    implementation(libs.openai.java)
-
-
-    implementation(libs.openai)
-
-
 
     // Use the correctly named reference
     implementation(libs.androidx.appcompat)
@@ -111,6 +124,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.storage.ktx)
     implementation(libs.firebase.database.ktx)
+
+    implementation(libs.protobuf.javalite)
+
 }
 
 kapt {
@@ -118,8 +134,7 @@ kapt {
 }
 
 configurations.all {
-    exclude(group = "com.openai")
+    exclude(group = "com.google.protobuf", module = "protobuf-java")
 }
-
 
 

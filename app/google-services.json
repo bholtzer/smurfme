@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "254760393697",
+    "project_id": "applicationsmurfforyou",
+    "storage_bucket": "applicationsmurfforyou.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254760393697:android:02decaa649fad6dd8f10a0",
+        "android_client_info": {
+          "package_name": "com.bih.applicationsmurfforyou"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8f5V1beBhfup6pK_bfxrd_CFy3OUI-1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
