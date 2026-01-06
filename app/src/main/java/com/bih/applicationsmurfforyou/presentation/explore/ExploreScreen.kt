@@ -1,8 +1,12 @@
 package com.bih.applicationsmurfforyou.presentation.explore
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,41 +19,70 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
 import com.bih.applicationsmurfforyou.presentation.ui.SmurfItem
-
 
 @Composable
 fun ExploreScreen(
-    viewModel: ExploreViewModel  = hiltViewModel(),
+    viewModel: ExploreViewModel = hiltViewModel(),
     onNavigate: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    SmurfTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.surface,
+                            MaterialTheme.colorScheme.background
+                        )
+                    )
+                )
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Explore Smurf Village",
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
 
-    Column(Modifier.padding(16.dp).fillMaxWidth().fillMaxHeight()) {
-        Text("Explore Smurfs", style = MaterialTheme.typography.headlineMedium)
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            modifier = Modifier.align(Alignment.End),
-            onClick = onNavigate
-        ) { Text("Create New Smurf") }
-
-        when (val state = uiState) {
-            ExploreUiState.Idle -> Text("Welcome to SmurfLand!")
-            ExploreUiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            is ExploreUiState.Error -> Text(state.message, color = Color.Red)
-
-            is ExploreUiState.Loaded -> {
-                LazyColumn {
-                    items(state.smurfs) { smurf ->
-                        SmurfItem(smurf)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                val uiState by viewModel.uiState.collectAsState()
+                when (val state = uiState) {
+                    ExploreUiState.Idle -> Text("Welcome to the Village!", style = MaterialTheme.typography.bodyLarge)
+                    ExploreUiState.Loading -> CircularProgressIndicator()
+                    is ExploreUiState.Error -> Text(state.message, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.error)
+                    is ExploreUiState.Loaded -> {
+                        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            items(state.smurfs) { smurf ->
+                                SmurfItem(smurf)
+                            }
+                        }
                     }
                 }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onNavigate
+            ) {
+                Text("Create a New Smurf")
             }
         }
     }
 }
-
-
