@@ -45,6 +45,9 @@ fun ExploreScreen(
                 )
                 .padding(16.dp)
         ) {
+            // Spacer to push the title down from the top edge
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = "Explore Smurf Village",
                 style = MaterialTheme.typography.headlineLarge,
@@ -83,6 +86,9 @@ fun ExploreScreen(
             ) {
                 Text("Create a New Smurf")
             }
+
+            // Spacer to push the button up from the bottom native navigation bar
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

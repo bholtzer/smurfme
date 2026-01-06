@@ -108,6 +108,9 @@ fun SmurfScreen(
                 )
                 .padding(16.dp)
         ) {
+            // Spacer to push the title down from the top edge
+            Spacer(modifier = Modifier.height(32.dp))
+
             Text(
                 text = "Smurfify Yourself!",
                 style = MaterialTheme.typography.headlineLarge,
@@ -144,6 +147,9 @@ fun SmurfScreen(
                 onCameraClick = { requestPermission.launch(cameraPermission) },
                 onRefreshClick = { lastImageUri?.let { viewModel.onImageChosen(it) } }
             )
+
+            // Spacer to push the buttons up from the bottom native navigation bar
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
