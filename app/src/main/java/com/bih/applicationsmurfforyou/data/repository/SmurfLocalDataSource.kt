@@ -23,7 +23,7 @@ class SmurfLocalDataSource(
                 Smurf(
                     name = it.nameWithoutExtension,
                     description = "A classic smurf named ${it.nameWithoutExtension}",
-                    image = it.toString()
+                    imageUrl = it.toString()
                 )
             }
             ?: emptyList()

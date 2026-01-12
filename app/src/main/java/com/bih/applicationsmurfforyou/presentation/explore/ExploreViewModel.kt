@@ -1,14 +1,9 @@
 package com.bih.applicationsmurfforyou.presentation.explore
 
-
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bih.applicationsmurfforyou.data.repository.SmurfRepositoryImpl
 import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.domain.repository.SmurfRepository
-import com.bih.applicationsmurfforyou.domain.usecase.GetAllSmurfsUseCase
-import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,45 +12,42 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private val getAllSmurfs: GetAllSmurfsUseCase,
     private val repository: SmurfRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ExploreUiState>(ExploreUiState.Idle)
     val uiState: StateFlow<ExploreUiState> = _uiState
 
-    private val _smurfs = MutableStateFlow<List<Smurf>>(emptyList())
-    val smurfs: StateFlow<List<Smurf>> = _smurfs
-
     init {
-        loadSmurfs()
+        loadSmurfs(isRefreshing = false)
     }
 
-    private fun loadSmurfs() = viewModelScope.launch {
-        _uiState.value = ExploreUiState.Loading
-        try {
+    fun onRefresh() {
+        loadSmurfs(isRefreshing = true)
+    }
+
+    private fun loadSmurfs(isRefreshing: Boolean) {
         viewModelScope.launch {
-            _smurfs.value = repository.getAllSmurfsCached()
+            val currentState = _uiState.value
 
-            //_uiState.value =
-                if (smurfs.value.isEmpty()) {
-                    _uiState.value = ExploreUiState.Loading
-                    _smurfs.value = repository.getAllSmurfs()
-                    _uiState.value = ExploreUiState.Loaded(_smurfs.value)
+            if (isRefreshing && currentState is ExploreUiState.Loaded) {
+                _uiState.value = currentState.copy(isRefreshing = true)
+            } else {
+                _uiState.value = ExploreUiState.Loading
+            }
 
+            try {
+                val smurfs = repository.getAllSmurfs()
+
+                if (smurfs.isEmpty()) {
+                    _uiState.value = ExploreUiState.Error("No characters found in the village.")
                 } else {
-                    _uiState.value = ExploreUiState.Loaded(_smurfs.value)
+                    _uiState.value = ExploreUiState.Loaded(smurfs, isRefreshing = false)
                 }
-                        //as ExploreUiState
 
+            } catch (e: Exception) {
+                _uiState.value = ExploreUiState.Error(e.message ?: "Failed to load smurfs from Firebase")
+            }
         }
-        } catch (e: Exception) {
-            _uiState.value = ExploreUiState.Error(e.message ?: "Failed to load smurfs")
-             Log.e("ExploreViewModel", "loadSmurfs error: ${e.message}")
-        }
-    }
-
-    fun refresh() {
-        loadSmurfs()
     }
 }

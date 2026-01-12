@@ -59,6 +59,7 @@ android {
 
 
 dependencies {
+    implementation("androidx.compose.material:material:1.7.0-beta01")
     implementation(libs.google.firebase.appcheck.playintegrity)
     implementation(libs.accompanist.navigation.animation)
 

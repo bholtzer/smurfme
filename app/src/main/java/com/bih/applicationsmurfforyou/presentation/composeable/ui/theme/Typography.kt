@@ -16,36 +16,36 @@ val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = CartoonFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 57.sp,
-        lineHeight = 64.sp,
+        fontSize = 61.sp, // +2sp
+        lineHeight = 68.sp,
         letterSpacing = (-0.25).sp,
     ),
     headlineLarge = TextStyle(
         fontFamily = CartoonFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 32.sp,
-        lineHeight = 40.sp,
+        fontSize = 36.sp, // +2sp
+        lineHeight = 44.sp,
         letterSpacing = 0.sp
     ),
     titleLarge = TextStyle(
         fontFamily = CartoonFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
+        fontSize = 26.sp, // +2sp
+        lineHeight = 32.sp,
         letterSpacing = 0.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = CartoonFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp, // Increased size for readability
-        lineHeight = 24.sp,
+        fontSize = 22.sp, // +2sp
+        lineHeight = 28.sp,
         letterSpacing = 0.5.sp
     ),
     labelLarge = TextStyle(
         fontFamily = CartoonFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
+        fontSize = 18.sp, // +1sp
+        lineHeight = 26.sp,
         letterSpacing = 0.5.sp
     )
 )

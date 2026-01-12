@@ -1,36 +1,65 @@
 package com.bih.applicationsmurfforyou.presentation.explore
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
+import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
-import com.bih.applicationsmurfforyou.presentation.ui.SmurfItem
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
     onNavigate: () -> Unit
 ) {
     SmurfTheme {
+        val uiState by viewModel.uiState.collectAsState()
+        val isRefreshing = (uiState as? ExploreUiState.Loaded)?.isRefreshing ?: false
+        val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = { viewModel.onRefresh() })
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -45,37 +74,52 @@ fun ExploreScreen(
                 )
                 .padding(16.dp)
         ) {
-            // Spacer to push the title down from the top edge
-            Spacer(modifier = Modifier.height(16.dp))
-
             Text(
-                text = "Explore Smurf Village",
+                text = "Welcome to Smurf Village",
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .weight(1f)
+                    .pullRefresh(pullRefreshState)
             ) {
-                val uiState by viewModel.uiState.collectAsState()
                 when (val state = uiState) {
-                    ExploreUiState.Idle -> Text("Welcome to the Village!", style = MaterialTheme.typography.bodyLarge)
-                    ExploreUiState.Loading -> CircularProgressIndicator()
-                    is ExploreUiState.Error -> Text(state.message, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.error)
+                    is ExploreUiState.Loading -> {
+                        LoadingState(modifier = Modifier.align(Alignment.Center))
+                    }
+                    is ExploreUiState.Error -> {
+                        Text(
+                            text = "Error: ${state.message}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
                     is ExploreUiState.Loaded -> {
-                        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                            items(state.smurfs) { smurf ->
-                                SmurfItem(smurf)
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 128.dp),
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(state.smurfs) { character ->
+                                SmurfCharacterCard(character = character)
                             }
                         }
                     }
+                    is ExploreUiState.Idle -> {}
                 }
+
+                PullRefreshIndicator(
+                    refreshing = isRefreshing,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -84,11 +128,74 @@ fun ExploreScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onNavigate
             ) {
-                Text("Create a New Smurf")
+                Text("Create Your Own Smurf")
             }
 
-            // Spacer to push the button up from the bottom native navigation bar
-            Spacer(modifier = Modifier.height(32.dp))
+            // Add spacer to push button up from the bottom navigation bar
+            Spacer(modifier = Modifier.height(30.dp))
         }
+    }
+}
+
+@Composable
+fun SmurfCharacterCard(character: Smurf) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(character.imageUrl)
+                    .crossfade(true)
+                    .size(256)
+                    .build(),
+                loading = {
+                    CircularProgressIndicator(modifier = Modifier.padding(32.dp))
+                },
+                contentDescription = character.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.aspectRatio(1f)
+            )
+            character.name?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun LoadingState(modifier: Modifier = Modifier) {
+    val alpha = remember { Animatable(0.5f) }
+    LaunchedEffect(Unit) {
+        alpha.animateTo(
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 1000, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            )
+        )
+    }
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(80.dp),
+            strokeWidth = 8.dp,
+            color = MaterialTheme.colorScheme.background
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Loading Village...",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.alpha(alpha.value)
+        )
     }
 }

@@ -47,7 +47,7 @@ class SmurfRepository(
                 Smurf(
                     name = fileName.substringBeforeLast("."),     // "papa"
                     description = "A classic smurf named $fileName", // 🔹 Placeholder description
-                    image = downloadUrl                            // 🔹 match `image: String`
+                    imageUrl = downloadUrl                            // 🔹 match `image: String`
                 )
             }
 

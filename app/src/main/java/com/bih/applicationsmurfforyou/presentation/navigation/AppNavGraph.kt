@@ -9,6 +9,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.bih.applicationsmurfforyou.presentation.explore.ExploreScreen
+import com.bih.applicationsmurfforyou.presentation.openscreen.OpenScreen
 import com.bih.applicationsmurfforyou.presentation.smurfify.SmurfScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -19,7 +20,7 @@ fun AppNavGraph(navController: NavHostController) {
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavRoutes.EXPLORE,
+        startDestination = NavRoutes.OPEN_SCREEN, // New starting destination
         enterTransition = {
             slideInHorizontally(
                 initialOffsetX = { fullWidth -> fullWidth },
@@ -46,6 +47,16 @@ fun AppNavGraph(navController: NavHostController) {
         }
     ) {
 
+        // Opening Screen (splash screen)
+        composable(NavRoutes.OPEN_SCREEN) {
+            OpenScreen {
+                // Navigate to ExploreScreen and remove OpenScreen from the back stack
+                navController.navigate(NavRoutes.EXPLORE) {
+                    popUpTo(NavRoutes.OPEN_SCREEN) { inclusive = true }
+                }
+            }
+        }
+
         // Explore (list screen)
         composable(NavRoutes.EXPLORE) {
             ExploreScreen(
@@ -59,6 +70,3 @@ fun AppNavGraph(navController: NavHostController) {
         }
     }
 }
-
-
-

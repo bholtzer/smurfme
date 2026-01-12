@@ -31,7 +31,7 @@ fun SmurfItem(smurf: Smurf) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
              //   .data(smurf.imageUrl)
-                .data(smurf.image)
+                .data(smurf.imageUrl)
                 .size(180)
                 .crossfade(true)
                 .build(),
@@ -46,14 +46,14 @@ fun SmurfItem(smurf: Smurf) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = smurf.name,
+            text = smurf.name.toString(),
             style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = smurf.description,
+            text = smurf.description.toString(),
             style = MaterialTheme.typography.bodySmall,
             color = Color.Gray
         )
