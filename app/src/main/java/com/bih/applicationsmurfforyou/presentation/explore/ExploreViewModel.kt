@@ -31,17 +31,21 @@ class ExploreViewModel @Inject constructor(
             val currentState = _uiState.value
 
             if (isRefreshing && currentState is ExploreUiState.Loaded) {
+                // If we are refreshing an already loaded list, show the indicator immediately.
                 _uiState.value = currentState.copy(isRefreshing = true)
             } else {
+                // Otherwise, show the full-screen loader.
                 _uiState.value = ExploreUiState.Loading
             }
 
             try {
-                val smurfs = repository.getAllSmurfs()
+                // Pass the forceRefresh flag to the repository.
+                val smurfs = repository.getAllSmurfs(forceRefresh = isRefreshing)
 
                 if (smurfs.isEmpty()) {
-                    _uiState.value = ExploreUiState.Error("No characters found in the village.")
+                    _uiState.value = ExploreUiState.Error("No characters found in the village. Pull to refresh to try again.")
                 } else {
+                    // Ensure isRefreshing is set to false after the refresh completes.
                     _uiState.value = ExploreUiState.Loaded(smurfs, isRefreshing = false)
                 }
 

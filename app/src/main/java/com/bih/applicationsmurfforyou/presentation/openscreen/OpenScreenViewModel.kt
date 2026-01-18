@@ -4,19 +4,25 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.domain.repository.SmurfRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
+// The state model for THIS screen only.
 sealed class PreloadState {
     object Idle : PreloadState()
-    data class Loading(val progress: Int) : PreloadState()
+    data class Loading(val progress: Int) : PreloadState() // Loading state now holds progress data
     object Success : PreloadState()
     data class Error(val message: String) : PreloadState()
 }
@@ -38,22 +44,6 @@ class OpenScreenViewModel @Inject constructor(
         beginPreloading()
     }
 
-    private fun beginPreloading() {
-        // --- TEMPORARY DEBUGGING CODE TO SHOW PROGRESS BAR ---
-        // This code simulates a successful load to prove the UI is working.
-        // It should be removed after you fix your Firebase configuration.
-        viewModelScope.launch {
-            _preloadState.value = PreloadState.Loading(0)
-            for (i in 1..100) {
-                delay(40) // Simulate network and image loading time
-                _preloadState.value = PreloadState.Loading(i)
-            }
-            _preloadState.value = PreloadState.Success
-        }
-    }
-
-    /*
-    // --- ORIGINAL CODE (DISABLED FOR DEBUGGING) ---
     private fun beginPreloading() {
         viewModelScope.launch {
             try {
@@ -98,6 +88,7 @@ class OpenScreenViewModel @Inject constructor(
             for (character in smurfs) {
                 launch {
                     try {
+                        // Use the correct `imageUrl` field from the Smurf data class
                         character.imageUrl?.let {
                             withTimeoutOrNull(5000L) {
                                 val request = ImageRequest.Builder(context).data(it).build()
@@ -113,5 +104,4 @@ class OpenScreenViewModel @Inject constructor(
             }
         }
     }
-    */
 }

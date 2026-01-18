@@ -1,0 +1,162 @@
+[
+  {
+    "description :": "The wise and kind leader of the Smurfs",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fpapa_smurf.png?alt=media",
+    "name": "Papa Sumrf"
+  },
+  {
+    "description": "The first female Smurf created by Gargamel",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fsmurfette.png?alt=media",
+    "name": "Smurfette"
+  },
+  {
+    "description": "Known for his intelligence and love of lecturing",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fbrainy_smurf.png?alt=media",
+    "name": "Brainy Smurf"
+  },
+  {
+    "name": "Hefty Smurf",
+    "description": "The strongest Smurf, recognized by his heart tattoo.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fhefty_smurf.png?alt=media"
+  },
+  {
+    "name": "Clumsy Smurf",
+    "description": "A lovable Smurf known for his awkwardness.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fclumsy_smurf.png?alt=media"
+  },
+  {
+    "name": "Grouchy Smurf",
+    "description": "Always grumpy and known for saying 'I hate this!'",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fgrouchy_smurf.png?alt=media"
+  },
+  {
+    "name": "Jokey Smurf",
+    "description": "Loves pranks and surprise gifts that explode.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fjokey_smurf.png?alt=media"
+  },
+  {
+    "name": "Lazy Smurf",
+    "description": "Always looking for a place to nap.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Flazy_smurf.png?alt=media"
+  },
+  {
+    "name": "Handy Smurf",
+    "description": "The village inventor and builder.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fhandy_smurf.png?alt=media"
+  },
+  {
+    "name": "Vanity Smurf",
+    "description": "Obsessed with his own reflection.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fvanity_smurf.png?alt=media"
+  },
+  {
+    "name": "Chef Smurf",
+    "description": "Loves cooking and baking for the village.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fchef_smurf.png?alt=media"
+  },
+  {
+    "name": "Greedy Smurf",
+    "description": "Always hungry and eating.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fgreedy_smurf.png?alt=media"
+  },
+  {
+    "name": "Painter Smurf",
+    "description": "An artist who paints all the time.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fpainter_smurf.png?alt=media"
+  },
+  {
+    "name": "Poet Smurf",
+    "description": "Writes romantic and expressive poetry.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fpoet_smurf.png?alt=media"
+  },
+  {
+    "name": "Harmony Smurf",
+    "description": "Wants to be a musician, but his playing is terrible.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fharmony_smurf.png?alt=media"
+  },
+  {
+    "name": "Farmer Smurf",
+    "description": "Takes care of crops and food.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Ffarmer_smurf.png?alt=media"
+  },
+  {
+    "name": "Tailor Smurf",
+    "description": "Makes clothes for the Smurfs.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Ftailor_smurf.png?alt=media"
+  },
+  {
+    "name": "Doctor Smurf",
+    "description": "Cares for the health of the Smurfs.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fdoctor_smurf.png?alt=media"
+  },
+  {
+    "name": "Tracker Smurf",
+    "description": "Expert in navigating the forest.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Ftracker_smurf.png?alt=media"
+  },
+  {
+    "name": "Wild Smurf",
+    "description": "Lives in the forest, more primitive.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fwild_smurf.png?alt=media"
+  },
+  {
+    "name": "Grandpa Smurf",
+    "description": "The oldest and wisest Smurf.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fgrandpa_smurf.png?alt=media"
+  },
+  {
+    "name": "Nanny Smurf",
+    "description": "Cares for Baby Smurf and others.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fnanny_smurf.png?alt=media"
+  },
+  {
+    "name": "Baby Smurf",
+    "description": "The youngest and cutest Smurf.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fbaby_smurf.png?alt=media"
+  },
+  {
+    "name": "Sassette Smurfling",
+    "description": "A girl Smurfling created by other Smurflings.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fsassette_smurfling.png?alt=media"
+  },
+  {
+    "name": "Snappy Smurfling",
+    "description": "A lively and headstrong Smurfling.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fsnappy_smurfling.png?alt=media"
+  },
+  {
+    "name": "Slouchy Smurfling",
+    "description": "Laid-back and easy-going Smurfling.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fslouchy_smurfling.png?alt=media"
+  },
+  {
+    "name": "Nat Smurfling",
+    "description": "Nature-loving and animal-friendly Smurfling.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fnat_smurfling.png?alt=media"
+  },
+  {
+    "name": "Clockwork Smurf",
+    "description": "A mechanical Smurf built by Handy.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fclockwork_smurf.png?alt=media"
+  },
+  {
+    "name": "Dopey Smurf",
+    "description": "Simple-minded but kind-hearted.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fdopey_smurf.png?alt=media"
+  },
+    {
+    "name": "Harmony Smurf",
+    "description": "Harmony is a Smurf who loves to play music with his little bugled.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fharmony_smurf.png?alt=media"
+  },
+   {
+    "name": "Soccer Smurf",
+    "description": "Kick the Ball into your face.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fsoccer_smurf.png?alt=media"
+  },
+  {
+    "name": "Tracker Smurf",
+    "description": "Helps find lost items or Smurfs in the forest.",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Ftracker_smurf2.png?alt=media"
+  }
+]

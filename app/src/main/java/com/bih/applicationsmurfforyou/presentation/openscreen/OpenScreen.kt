@@ -81,7 +81,7 @@ private fun LoadingProgressIndicator(progress: Float) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "${(progress * 100).toInt()}%",
+            text = "${(animatedProgress * 100).toInt()}%",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimary
         )
