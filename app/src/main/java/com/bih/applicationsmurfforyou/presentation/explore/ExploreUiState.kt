@@ -1,7 +1,6 @@
 package com.bih.applicationsmurfforyou.presentation.explore
 
 import com.bih.applicationsmurfforyou.domain.model.Smurf
-import com.bih.applicationsmurfforyou.domain.models.SmurfCharacter
 
 sealed class ExploreUiState {
     object Idle : ExploreUiState()

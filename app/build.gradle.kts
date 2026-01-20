@@ -61,7 +61,6 @@ android {
 dependencies {
     implementation("androidx.compose.material:material:1.7.0-beta01")
     implementation(libs.google.firebase.appcheck.playintegrity)
-    implementation(libs.accompanist.navigation.animation)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
@@ -73,7 +72,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.firebase.ai)
     implementation(platform(libs.firebase.bom))
-
+    implementation(libs.accompanist.navigation.animation.v0340)
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.crashlytics.buildtools)
@@ -93,6 +92,7 @@ dependencies {
     // For handling images
     implementation(libs.androidx.core.ktx.v1150)
     implementation(libs.coil)
+    implementation(libs.androidx.compose.animation)
 
     kapt(libs.dagger.hilt.compiler)
 

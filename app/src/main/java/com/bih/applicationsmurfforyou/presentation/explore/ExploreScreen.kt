@@ -6,6 +6,7 @@ import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,7 +54,8 @@ import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfThe
 @Composable
 fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
-    onNavigate: () -> Unit
+    onNavigateToSmurfify: () -> Unit,
+    onSmurfClick: (String) -> Unit // New callback for when a smurf is clicked
 ) {
     SmurfTheme {
         val uiState by viewModel.uiState.collectAsState()
@@ -108,7 +110,10 @@ fun ExploreScreen(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             items(state.smurfs) { character ->
-                                SmurfCharacterCard(character = character)
+                                // Pass the click event up, using the character's name
+                                SmurfCharacterCard(character = character) {
+                                    character.name?.let { onSmurfClick(it) }
+                                }
                             }
                         }
                     }
@@ -126,20 +131,20 @@ fun ExploreScreen(
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onNavigate
+                onClick = onNavigateToSmurfify
             ) {
                 Text("Create Your Own Smurf")
             }
 
-            // Add spacer to push button up from the bottom navigation bar
             Spacer(modifier = Modifier.height(30.dp))
         }
     }
 }
 
 @Composable
-fun SmurfCharacterCard(character: Smurf) {
+fun SmurfCharacterCard(character: Smurf, onClick: () -> Unit) {
     Card(
+        modifier = Modifier.clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         shape = MaterialTheme.shapes.medium
     ) {

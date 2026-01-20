@@ -8,19 +8,22 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.navArgument
 import com.bih.applicationsmurfforyou.presentation.explore.ExploreScreen
 import com.bih.applicationsmurfforyou.presentation.openscreen.OpenScreen
+import com.bih.applicationsmurfforyou.presentation.smurf_detail.SmurfDetailScreen
 import com.bih.applicationsmurfforyou.presentation.smurfify.SmurfScreen
-import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
-        startDestination = NavRoutes.OPEN_SCREEN, // New starting destination
+        startDestination = NavRoutes.OPEN_SCREEN,
         enterTransition = {
             slideInHorizontally(
                 initialOffsetX = { fullWidth -> fullWidth },
@@ -50,7 +53,6 @@ fun AppNavGraph(navController: NavHostController) {
         // Opening Screen (splash screen)
         composable(NavRoutes.OPEN_SCREEN) {
             OpenScreen {
-                // Navigate to ExploreScreen and remove OpenScreen from the back stack
                 navController.navigate(NavRoutes.EXPLORE) {
                     popUpTo(NavRoutes.OPEN_SCREEN) { inclusive = true }
                 }
@@ -60,8 +62,19 @@ fun AppNavGraph(navController: NavHostController) {
         // Explore (list screen)
         composable(NavRoutes.EXPLORE) {
             ExploreScreen(
-                onNavigate = { navController.navigate(NavRoutes.SMURFIFY) }
+                onNavigateToSmurfify = { navController.navigate(NavRoutes.SMURFIFY) },
+                onSmurfClick = { smurfName ->
+                    navController.navigate(NavRoutes.smurfDetail(smurfName))
+                }
             )
+        }
+
+        // Smurf Detail Screen
+        composable(
+            route = NavRoutes.SMURF_DETAIL,
+            arguments = listOf(navArgument("smurfName") { type = NavType.StringType })
+        ) {
+            SmurfDetailScreen()
         }
 
         // Smurfify (ai screen)
