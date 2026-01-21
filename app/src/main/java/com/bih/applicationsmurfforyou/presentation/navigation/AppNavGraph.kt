@@ -9,19 +9,22 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
+ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bih.applicationsmurfforyou.presentation.explore.ExploreScreen
 import com.bih.applicationsmurfforyou.presentation.openscreen.OpenScreen
+import com.bih.applicationsmurfforyou.presentation.settings.PermissionsScreen
+import com.bih.applicationsmurfforyou.presentation.settings.PrivacyScreen
+import com.bih.applicationsmurfforyou.presentation.settings.TermsScreen
 import com.bih.applicationsmurfforyou.presentation.smurf_detail.SmurfDetailScreen
 import com.bih.applicationsmurfforyou.presentation.smurfify.SmurfScreen
-import com.google.accompanist.navigation.animation.composable
+ import com.google.accompanist.navigation.animation.AnimatedNavHost
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = NavRoutes.OPEN_SCREEN,
         enterTransition = {
@@ -63,9 +66,11 @@ fun AppNavGraph(navController: NavHostController) {
         composable(NavRoutes.EXPLORE) {
             ExploreScreen(
                 onNavigateToSmurfify = { navController.navigate(NavRoutes.SMURFIFY) },
-                onSmurfClick = { smurfName ->
-                    navController.navigate(NavRoutes.smurfDetail(smurfName))
-                }
+                onSmurfClick = { smurfName -> navController.navigate(NavRoutes.smurfDetail(smurfName)) },
+                onNavigateToLanguage = { /* TODO */ },
+                onNavigateToPermissions = { navController.navigate(NavRoutes.PERMISSIONS) },
+                onNavigateToPrivacy = { navController.navigate(NavRoutes.PRIVACY_POLICY) },
+                onNavigateToTerms = { navController.navigate(NavRoutes.TERMS_CONDITIONS) }
             )
         }
 
@@ -81,5 +86,10 @@ fun AppNavGraph(navController: NavHostController) {
         composable(NavRoutes.SMURFIFY) {
             SmurfScreen { navController.popBackStack() }
         }
+        
+        // Settings Content Screens
+        composable(NavRoutes.PRIVACY_POLICY) { PrivacyScreen(onBack = { navController.popBackStack() }) }
+        composable(NavRoutes.TERMS_CONDITIONS) { TermsScreen(onBack = { navController.popBackStack() }) }
+        composable(NavRoutes.PERMISSIONS) { PermissionsScreen(onBack = { navController.popBackStack() }) }
     }
 }

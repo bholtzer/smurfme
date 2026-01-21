@@ -7,7 +7,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -40,7 +38,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun SmurfDetailScreen(
@@ -82,27 +83,51 @@ fun SmurfDetailScreen(
 }
 
 @Composable
-fun SmurfDetailContent(smurf: com.bih.applicationsmurfforyou.domain.model.Smurf, isSpeaking: Boolean) {
-    val infiniteTransition = rememberInfiniteTransition(label = "Speaking Animation")
-    val speakingScale by infiniteTransition.animateFloat(
+fun SmurfDetailContent(smurf: Smurf, isSpeaking: Boolean) {
+    // --- Breathing/Talking Animation --- a much more lifelike effect than simple scaling
+    val infiniteTransition = rememberInfiniteTransition(label = "Breathing Animation")
+    val breathingScale by infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = 1.05f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 300, easing = FastOutSlowInEasing),
+            animation = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
-        label = "Speaking Scale"
+        label = "Breathing Scale"
     )
 
-    var isWobbling by remember { mutableStateOf(false) }
-    val wobbleRotation = remember { Animatable(0f) }
+    // --- Choreographed Dance Animation States ---
+    var isDancing by remember { mutableStateOf(false) }
+    val rotationY = remember { Animatable(0f) }
+    val translationY = remember { Animatable(0f) }
+    val rotationZ = remember { Animatable(0f) }
 
-    LaunchedEffect(isWobbling) {
-        if (isWobbling) {
-            wobbleRotation.animateTo(15f, animationSpec = tween(150))
-            wobbleRotation.animateTo(-15f, animationSpec = tween(150))
-            wobbleRotation.animateTo(0f, animationSpec = tween(150))
-            isWobbling = false
+    // This LaunchedEffect triggers the complex dance sequence when the user clicks.
+    LaunchedEffect(isDancing) {
+        if (isDancing) {
+            launch {
+                // 1. Crouch
+                translationY.animateTo(50f, animationSpec = tween(200, easing = FastOutSlowInEasing))
+                // 2. Jump
+                translationY.animateTo(-150f, animationSpec = tween(400, easing = FastOutSlowInEasing))
+                // 3. Land
+                translationY.animateTo(0f, animationSpec = tween(300, easing = FastOutSlowInEasing))
+            }
+            launch {
+                // 4. Spin while in the air
+                delay(200) // Wait until the smurf has jumped
+                rotationY.animateTo(360f, animationSpec = tween(600))
+                rotationY.snapTo(0f) // Reset for the next dance
+            }
+            launch {
+                // 5. Settle with a wobble after landing
+                delay(900) // Wait until landing is complete
+                rotationZ.animateTo(10f, animationSpec = tween(100))
+                rotationZ.animateTo(-10f, animationSpec = tween(100))
+                rotationZ.animateTo(0f, animationSpec = tween(100))
+
+                isDancing = false // Animation complete, ready for next tap
+            }
         }
     }
 
@@ -121,10 +146,22 @@ fun SmurfDetailContent(smurf: com.bih.applicationsmurfforyou.domain.model.Smurf,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(300.dp)
-                    .scale(if (isSpeaking) speakingScale else 1f)
-                    .graphicsLayer { rotationZ = wobbleRotation.value }
+                    .graphicsLayer {
+                        // Apply the choreographed dance animations
+                        this.translationY = translationY.value
+                        this.rotationY = rotationY.value
+                        this.rotationZ = rotationZ.value
+
+                        // Apply the breathing animation only when speaking
+                        if (isSpeaking) {
+                            this.scaleX = breathingScale
+                            this.scaleY = breathingScale
+                        }
+                    }
                     .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
-                        isWobbling = true
+                        if (!isDancing) { // Prevent starting a new dance while one is in progress
+                            isDancing = true
+                        }
                     }
             )
         }

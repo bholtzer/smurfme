@@ -11,6 +11,7 @@ firebaseAiImagen = "0.3.2"
 firebaseAiImagenEditing = "1.0.0"
 firebaseAiLogic = "1.0.0"
 firebaseBomVersion = "34.6.0"
+googleAccompanistNavigationAnimation = "0.36.0"
 googleCloudVertexai = "1.2.0"
 googleFirebaseBom = "33.5.1"
 hiltCompiler = "2.51.1"
@@ -45,7 +46,6 @@ animation = "1.10.1"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
-accompanist-navigation-animation-v0340 = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimationVersion" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }

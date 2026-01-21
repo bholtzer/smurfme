@@ -22,6 +22,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -29,17 +31,28 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -50,93 +63,120 @@ import coil.request.ImageRequest
 import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
     onNavigateToSmurfify: () -> Unit,
-    onSmurfClick: (String) -> Unit // New callback for when a smurf is clicked
+    onSmurfClick: (String) -> Unit,
+    onNavigateToLanguage: () -> Unit,
+    onNavigateToPermissions: () -> Unit,
+    onNavigateToPrivacy: () -> Unit,
+    onNavigateToTerms: () -> Unit
 ) {
-    SmurfTheme {
-        val uiState by viewModel.uiState.collectAsState()
-        val isRefreshing = (uiState as? ExploreUiState.Loaded)?.isRefreshing ?: false
-        val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = { viewModel.onRefresh() })
+    var showMenu by remember { mutableStateOf(false) }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.surface,
-                            MaterialTheme.colorScheme.background
+    SmurfTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Smurf Village") },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    actions = {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                        }
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(text = { Text("Language") }, onClick = { showMenu = false; onNavigateToLanguage() })
+                            DropdownMenuItem(text = { Text("Permissions") }, onClick = { showMenu = false; onNavigateToPermissions() })
+                            DropdownMenuItem(text = { Text("Privacy Policy") }, onClick = { showMenu = false; onNavigateToPrivacy() })
+                            DropdownMenuItem(text = { Text("Terms & Conditions") }, onClick = { showMenu = false; onNavigateToTerms() })
+                        }
+                    }
+                )
+            }
+        ) { paddingValues ->
+            val uiState by viewModel.uiState.collectAsState()
+            val isRefreshing = (uiState as? ExploreUiState.Loaded)?.isRefreshing ?: false
+            val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = { viewModel.onRefresh() })
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.surface,
+                                MaterialTheme.colorScheme.background
+                            )
                         )
                     )
-                )
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Welcome to Smurf Village",
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .pullRefresh(pullRefreshState)
+                    .padding(horizontal = 16.dp)
             ) {
-                when (val state = uiState) {
-                    is ExploreUiState.Loading -> {
-                        LoadingState(modifier = Modifier.align(Alignment.Center))
-                    }
-                    is ExploreUiState.Error -> {
-                        Text(
-                            text = "Error: ${state.message}",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                    is ExploreUiState.Loaded -> {
-                        LazyVerticalGrid(
-                            columns = GridCells.Adaptive(minSize = 128.dp),
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            items(state.smurfs) { character ->
-                                // Pass the click event up, using the character's name
-                                SmurfCharacterCard(character = character) {
-                                    character.name?.let { onSmurfClick(it) }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .pullRefresh(pullRefreshState)
+                ) {
+                    when (val state = uiState) {
+                        is ExploreUiState.Loading -> {
+                            LoadingState(modifier = Modifier.align(Alignment.Center))
+                        }
+                        is ExploreUiState.Error -> {
+                            Text(
+                                text = "Error: ${state.message}",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                        is ExploreUiState.Loaded -> {
+                            LazyVerticalGrid(
+                                columns = GridCells.Adaptive(minSize = 128.dp),
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                items(state.smurfs) { character ->
+                                    SmurfCharacterCard(character = character) {
+                                        character.name?.let { onSmurfClick(it) }
+                                    }
                                 }
                             }
                         }
+                        is ExploreUiState.Idle -> {}
                     }
-                    is ExploreUiState.Idle -> {}
+
+                    PullRefreshIndicator(
+                        refreshing = isRefreshing,
+                        state = pullRefreshState,
+                        modifier = Modifier.align(Alignment.TopCenter)
+                    )
                 }
 
-                PullRefreshIndicator(
-                    refreshing = isRefreshing,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
-                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onNavigateToSmurfify
+                ) {
+                    Text("Create Your Own Smurf")
+                }
+
+                Spacer(modifier = Modifier.height(30.dp))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = onNavigateToSmurfify
-            ) {
-                Text("Create Your Own Smurf")
-            }
-
-            Spacer(modifier = Modifier.height(30.dp))
         }
     }
 }

@@ -72,8 +72,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.firebase.ai)
     implementation(platform(libs.firebase.bom))
-    implementation(libs.accompanist.navigation.animation.v0340)
-    // Hilt
+     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.firebase.appcheck.playintegrity)
@@ -92,7 +91,8 @@ dependencies {
     // For handling images
     implementation(libs.androidx.core.ktx.v1150)
     implementation(libs.coil)
-    implementation(libs.androidx.compose.animation)
+
+    implementation(libs.accompanist.navigation.animation)
 
     kapt(libs.dagger.hilt.compiler)
 
