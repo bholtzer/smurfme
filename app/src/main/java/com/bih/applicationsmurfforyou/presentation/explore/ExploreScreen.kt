@@ -1,16 +1,12 @@
 package com.bih.applicationsmurfforyou.presentation.explore
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,12 +14,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.PrivacyTip
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -42,7 +46,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,9 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -61,6 +62,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.bih.applicationsmurfforyou.domain.model.Smurf
+import com.bih.applicationsmurfforyou.presentation.composeable.LoadingState
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
@@ -75,6 +77,7 @@ fun ExploreScreen(
     onNavigateToTerms: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
+    val isGridLayout by viewModel.isGridLayout.collectAsState()
 
     SmurfTheme {
         Scaffold(
@@ -94,9 +97,34 @@ fun ExploreScreen(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false }
                         ) {
-                            DropdownMenuItem(text = { Text("Language") }, onClick = { showMenu = false; onNavigateToLanguage() })
-                            DropdownMenuItem(text = { Text("Permissions") }, onClick = { showMenu = false; onNavigateToPermissions() })
-                            DropdownMenuItem(text = { Text("Privacy Policy") }, onClick = { showMenu = false; onNavigateToPrivacy() })
+                            // Dynamic "Change Layout" menu item
+                            DropdownMenuItem(
+                                text = { Text(if (isGridLayout) "List View" else "Grid View") },
+                                onClick = { showMenu = false; viewModel.toggleLayout() },
+                                leadingIcon = {
+                                    Icon(
+                                        // Use the explicit icon theme to prevent resolution errors
+                                        if (isGridLayout) Icons.AutoMirrored.Filled.ViewList else Icons.Filled.GridView,
+                                        contentDescription = "Change Layout"
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Language") }, 
+                                onClick = { showMenu = false; onNavigateToLanguage() },
+                                leadingIcon = { Icon(Icons.Default.Language, contentDescription = "Language") }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Permissions") }, 
+                                onClick = { showMenu = false; onNavigateToPermissions() },
+                                leadingIcon = { Icon(Icons.Default.Shield, contentDescription = "Permissions") }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Privacy Policy") }, 
+                                onClick = { showMenu = false; onNavigateToPrivacy() },
+                                leadingIcon = { Icon(Icons.Default.PrivacyTip, contentDescription = "Privacy Policy") }
+                            )
+                            // Add Terms and Conditions Icon when available in Material Icons
                             DropdownMenuItem(text = { Text("Terms & Conditions") }, onClick = { showMenu = false; onNavigateToTerms() })
                         }
                     }
@@ -142,16 +170,31 @@ fun ExploreScreen(
                             )
                         }
                         is ExploreUiState.Loaded -> {
-                            LazyVerticalGrid(
-                                columns = GridCells.Adaptive(minSize = 128.dp),
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(8.dp),
-                                verticalArrangement = Arrangement.spacedBy(16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                items(state.smurfs) { character ->
-                                    SmurfCharacterCard(character = character) {
-                                        character.name?.let { onSmurfClick(it) }
+                            // Conditionally render Grid or List
+                            if(isGridLayout) {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Adaptive(minSize = 128.dp),
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = PaddingValues(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    items(state.smurfs) { character ->
+                                        SmurfCharacterCard(character = character) {
+                                            character.name?.let { onSmurfClick(it) }
+                                        }
+                                    }
+                                }
+                            } else {
+                                LazyColumn(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentPadding = PaddingValues(vertical = 8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    items(state.smurfs) { character ->
+                                        SmurfCharacterListItem(character = character) {
+                                            character.name?.let { onSmurfClick(it) }
+                                        }
                                     }
                                 }
                             }
@@ -181,6 +224,43 @@ fun ExploreScreen(
     }
 }
 
+// New composable for the List View item
+@Composable
+fun SmurfCharacterListItem(character: Smurf, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(8.dp)
+        ) {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(character.imageUrl)
+                    .crossfade(true)
+                    .build(),
+                loading = { CircularProgressIndicator() },
+                contentDescription = character.name,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(80.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                character.name?.let {
+                    Text(text = it, style = MaterialTheme.typography.titleLarge)
+                }
+                character.description?.let {
+                    Text(text = it, style = MaterialTheme.typography.bodyMedium, maxLines = 2)
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun SmurfCharacterCard(character: Smurf, onClick: () -> Unit) {
     Card(
@@ -199,7 +279,7 @@ fun SmurfCharacterCard(character: Smurf, onClick: () -> Unit) {
                     CircularProgressIndicator(modifier = Modifier.padding(32.dp))
                 },
                 contentDescription = character.name,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier.aspectRatio(1f)
             )
             character.name?.let {
@@ -216,16 +296,6 @@ fun SmurfCharacterCard(character: Smurf, onClick: () -> Unit) {
 
 @Composable
 fun LoadingState(modifier: Modifier = Modifier) {
-    val alpha = remember { Animatable(0.5f) }
-    LaunchedEffect(Unit) {
-        alpha.animateTo(
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 1000, easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse
-            )
-        )
-    }
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -239,8 +309,7 @@ fun LoadingState(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Loading Village...",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.alpha(alpha.value)
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }

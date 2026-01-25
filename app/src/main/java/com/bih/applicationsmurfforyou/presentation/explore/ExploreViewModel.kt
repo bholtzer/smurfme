@@ -7,6 +7,8 @@ import com.bih.applicationsmurfforyou.domain.repository.SmurfRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,12 +20,21 @@ class ExploreViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ExploreUiState>(ExploreUiState.Idle)
     val uiState: StateFlow<ExploreUiState> = _uiState
 
+    // New state for managing the layout
+    private val _isGridLayout = MutableStateFlow(true)
+    val isGridLayout: StateFlow<Boolean> = _isGridLayout.asStateFlow()
+
     init {
         loadSmurfs(isRefreshing = false)
     }
 
     fun onRefresh() {
         loadSmurfs(isRefreshing = true)
+    }
+
+    // New function to toggle the layout
+    fun toggleLayout() {
+        _isGridLayout.update { !it }
     }
 
     private fun loadSmurfs(isRefreshing: Boolean) {

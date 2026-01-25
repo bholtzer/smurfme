@@ -46,17 +46,17 @@ class SmurfViewModel @Inject constructor(
 
 
                 val prompt = """Create a 3D animated movie-style image. The scene is a whimsical Smurf village with large, colorful mushroom houses under a bright, cheerful sky.
-
-In the center of the scene is a single Smurf character. This character is short, stout, has smooth, solid blue skin, and is wearing the classic Smurf outfit: a large, white, floppy hat and white trousers.
-
-**CRITICAL INSTRUCTION:**
-The face of this Smurf **MUST** be a recognizable, stylized caricature of the person from the reference image.
-- **Preserve:** The core structure of their smile, nose, and jawline.
-- **Adapt:** Their features into a cute, 3D animated style. Their eyes should be large and expressive but retain the original person's general shape and position.
-- **Do Not:** Simply paste the real face onto the Smurf body. It must be a cohesive, artistic transformation.
-
-The final image must feel like a real Smurf that just happens to look like the person in the photo.
-"""
+                
+                In the center of the scene is a single Smurf character. This character is short, stout, has smooth, solid blue skin, and is wearing the classic Smurf outfit: a large, white, floppy hat and white trousers.
+                
+                **CRITICAL INSTRUCTION:**
+                The face of this Smurf **MUST** be a recognizable, stylized caricature of the person from the reference image.
+                - **Preserve:** The core structure of their smile, nose, and jawline.
+                - **Adapt:** Their features into a cute, 3D animated style. Their eyes should be large and expressive but retain the original person's general shape and position.
+                - **Do Not:** Simply paste the real face onto the Smurf body. It must be a cohesive, artistic transformation.
+                
+                The final image must feel like a real Smurf that just happens to look like the person in the photo.
+                """
 
 
 

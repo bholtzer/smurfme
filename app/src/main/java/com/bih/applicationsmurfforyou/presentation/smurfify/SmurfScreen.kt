@@ -149,7 +149,7 @@ fun SmurfScreen(
             )
 
             // Add spacer to push button up from the bottom navigation bar
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }

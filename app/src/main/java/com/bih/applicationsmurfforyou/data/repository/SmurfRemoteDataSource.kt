@@ -16,12 +16,9 @@ class SmurfRemoteDataSource(
         sourceBitmap: Bitmap
     ): Bitmap {
         val prompt = """
-            Transform the person in the image into a cartoon Smurf character.
-            Preserve facial expression, identity, and head pose.
-            Apply smooth blue cartoon skin and a classic white Smurf hat.
-            Keep the same hairstyle and face shape.
-            Cartoon illustration style with clean outlines and soft shading.
-            Do not change the background.
+            A photorealistic, high-detail smurf version of the person in this image. 
+            Preserve the facial features, expression, and any accessories like glasses or beards. 
+            The skin must be blue and they must be wearing a white smurf hat.
         """.trimIndent()
 
         val response = imagenModel.editImage(

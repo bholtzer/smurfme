@@ -15,10 +15,10 @@ class SmurfRepositoryImpl @Inject constructor() : SmurfRepository {
     private var cachedSmurfs: List<Smurf>? = null
 
     override suspend fun getAllSmurfs(forceRefresh: Boolean): List<Smurf> {
-        if (forceRefresh || cachedSmurfs == null) {
-            cachedSmurfs = fetchAndCacheSmurfs()
+        if (forceRefresh) {
+            cachedSmurfs = null
         }
-        return cachedSmurfs ?: emptyList()
+        return cachedSmurfs ?: fetchAndCacheSmurfs()
     }
 
     override fun getSmurfByName(name: String): Smurf? {

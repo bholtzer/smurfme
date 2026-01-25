@@ -59,6 +59,9 @@ android {
 
 
 dependencies {
+    implementation("androidx.datastore:datastore-preferences:1.1.1") // For persisting settings
+    implementation("com.google.android.gms:play-services-ads:23.1.0") 
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
     implementation("androidx.compose.material:material:1.7.0-beta01")
     implementation(libs.google.firebase.appcheck.playintegrity)
 
@@ -72,7 +75,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.firebase.ai)
     implementation(platform(libs.firebase.bom))
-     // Hilt
+
+    // Hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.firebase.appcheck.playintegrity)
@@ -98,14 +102,6 @@ dependencies {
 
     //AI
      implementation(libs.tasks.vision.image.generator)
-
-    // Import the BoM for the Firebase platform
-  //  implementation(libs.firebase.bom.v3460)
-
-
-    // Add the dependency for the Firebase AI Logic library. When using the BoM,
-    // you don't specify versions in Firebase library dependencies
-    //implementation(libs.firebase.ai)
 
     implementation(libs.ktor.client.serialization)
     implementation(libs.ktor.client.android)

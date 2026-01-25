@@ -3,16 +3,17 @@ package com.bih.applicationsmurfforyou.domain.repository
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Repository for managing user preferences.
+ * Repository for managing user preferences, such as language.
  */
 interface SettingsRepository {
     /**
-     * Gets the user's preferred language code (e.g., "en", "es").
+     * Gets the user's currently selected language code (e.g., "en", "es").
+     * Returns a flow that emits the language code whenever it changes.
      */
-    fun getLanguage(): Flow<String>
+    fun getLanguageCode(): Flow<String>
 
     /**
-     * Sets the user's preferred language code.
+     * Sets and persists the user's selected language code.
      */
-    suspend fun setLanguage(languageCode: String)
+    suspend fun setLanguageCode(languageCode: String)
 }

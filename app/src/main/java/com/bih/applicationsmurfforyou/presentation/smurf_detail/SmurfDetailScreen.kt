@@ -1,12 +1,13 @@
 package com.bih.applicationsmurfforyou.presentation.smurf_detail
 
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -41,7 +42,6 @@ import coil.request.ImageRequest
 import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun SmurfDetailScreen(
@@ -84,52 +84,61 @@ fun SmurfDetailScreen(
 
 @Composable
 fun SmurfDetailContent(smurf: Smurf, isSpeaking: Boolean) {
-    // --- Breathing/Talking Animation --- a much more lifelike effect than simple scaling
+    // --- Breathing/Talking Animation --- A more natural up-and-down motion
     val infiniteTransition = rememberInfiniteTransition(label = "Breathing Animation")
-    val breathingScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.05f,
+    val breathingOffsetY by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = -15f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
+            animation = tween(durationMillis = 1400, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
-        label = "Breathing Scale"
+        label = "Breathing Offset"
     )
 
-    // --- Choreographed Dance Animation States ---
+    // --- Choreographed Dance Animation --- using a unified transition
     var isDancing by remember { mutableStateOf(false) }
-    val rotationY = remember { Animatable(0f) }
-    val translationY = remember { Animatable(0f) }
-    val rotationZ = remember { Animatable(0f) }
+    val danceTransition = updateTransition(targetState = isDancing, label = "Dance Transition")
 
-    // This LaunchedEffect triggers the complex dance sequence when the user clicks.
+    val translationY by danceTransition.animateFloat(
+        transitionSpec = { keyframes { 
+            durationMillis = 1200
+            0f at 0 // Start
+            50f at 200 // Crouch
+            -150f at 600 // Jump
+            0f at 900 // Land
+        } },
+        label = "Dance TranslationY"
+    ) { dancing -> if (dancing) 0f else 0f }
+
+    val rotationY by danceTransition.animateFloat(
+        transitionSpec = { keyframes { 
+            durationMillis = 1200
+            0f at 200 // Start spinning after crouch
+            360f at 800 // Complete spin in the air
+        } },
+        label = "Dance RotationY"
+    ) { dancing -> if (dancing) 0f else 0f }
+
+    val rotationZ by danceTransition.animateFloat(
+        transitionSpec = { keyframes { 
+            durationMillis = 1200
+            0f at 900 // Start wobble on land
+            10f at 1000
+            -10f at 1100
+            0f at 1200 // End wobble
+        } },
+        label = "Dance RotationZ"
+    ) { dancing -> if (dancing) 0f else 0f }
+
+    // This effect resets the animation state after it has finished playing.
     LaunchedEffect(isDancing) {
         if (isDancing) {
-            launch {
-                // 1. Crouch
-                translationY.animateTo(50f, animationSpec = tween(200, easing = FastOutSlowInEasing))
-                // 2. Jump
-                translationY.animateTo(-150f, animationSpec = tween(400, easing = FastOutSlowInEasing))
-                // 3. Land
-                translationY.animateTo(0f, animationSpec = tween(300, easing = FastOutSlowInEasing))
-            }
-            launch {
-                // 4. Spin while in the air
-                delay(200) // Wait until the smurf has jumped
-                rotationY.animateTo(360f, animationSpec = tween(600))
-                rotationY.snapTo(0f) // Reset for the next dance
-            }
-            launch {
-                // 5. Settle with a wobble after landing
-                delay(900) // Wait until landing is complete
-                rotationZ.animateTo(10f, animationSpec = tween(100))
-                rotationZ.animateTo(-10f, animationSpec = tween(100))
-                rotationZ.animateTo(0f, animationSpec = tween(100))
-
-                isDancing = false // Animation complete, ready for next tap
-            }
+            delay(1200) // The total duration of the dance choreography
+            isDancing = false
         }
     }
+
 
     Column(
         modifier = Modifier.padding(16.dp),
@@ -148,20 +157,17 @@ fun SmurfDetailContent(smurf: Smurf, isSpeaking: Boolean) {
                     .size(300.dp)
                     .graphicsLayer {
                         // Apply the choreographed dance animations
-                        this.translationY = translationY.value
-                        this.rotationY = rotationY.value
-                        this.rotationZ = rotationZ.value
+                        this.translationY = translationY
+                        this.rotationY = rotationY
+                        this.rotationZ = rotationZ
 
                         // Apply the breathing animation only when speaking
                         if (isSpeaking) {
-                            this.scaleX = breathingScale
-                            this.scaleY = breathingScale
+                            this.translationY += breathingOffsetY
                         }
                     }
                     .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
-                        if (!isDancing) { // Prevent starting a new dance while one is in progress
-                            isDancing = true
-                        }
+                        if (!isDancing) { isDancing = true } // Trigger the animation
                     }
             )
         }
