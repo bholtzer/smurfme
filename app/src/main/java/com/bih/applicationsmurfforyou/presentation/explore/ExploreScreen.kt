@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MoreVert
@@ -103,7 +104,6 @@ fun ExploreScreen(
                                 onClick = { showMenu = false; viewModel.toggleLayout() },
                                 leadingIcon = {
                                     Icon(
-                                        // Use the explicit icon theme to prevent resolution errors
                                         if (isGridLayout) Icons.AutoMirrored.Filled.ViewList else Icons.Filled.GridView,
                                         contentDescription = "Change Layout"
                                     )
@@ -124,8 +124,11 @@ fun ExploreScreen(
                                 onClick = { showMenu = false; onNavigateToPrivacy() },
                                 leadingIcon = { Icon(Icons.Default.PrivacyTip, contentDescription = "Privacy Policy") }
                             )
-                            // Add Terms and Conditions Icon when available in Material Icons
-                            DropdownMenuItem(text = { Text("Terms & Conditions") }, onClick = { showMenu = false; onNavigateToTerms() })
+                            DropdownMenuItem(
+                                text = { Text("Terms & Conditions") }, 
+                                onClick = { showMenu = false; onNavigateToTerms() },
+                                leadingIcon = { Icon(Icons.Filled.Description, contentDescription = "Terms & Conditions") }
+                            )
                         }
                     }
                 )

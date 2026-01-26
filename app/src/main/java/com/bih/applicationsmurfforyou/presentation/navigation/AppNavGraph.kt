@@ -18,7 +18,7 @@ import com.bih.applicationsmurfforyou.presentation.settings.PrivacyScreen
 import com.bih.applicationsmurfforyou.presentation.settings.TermsScreen
 import com.bih.applicationsmurfforyou.presentation.smurf_detail.SmurfDetailScreen
 import com.bih.applicationsmurfforyou.presentation.smurfify.SmurfScreen
- import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

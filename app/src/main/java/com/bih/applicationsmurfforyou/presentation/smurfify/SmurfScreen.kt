@@ -1,22 +1,17 @@
 package com.bih.applicationsmurfforyou.presentation.smurfify
 
 import android.Manifest
+import android.app.Activity
 import android.graphics.Bitmap
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +26,6 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,7 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -53,20 +46,36 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.bih.applicationsmurfforyou.presentation.ads.InterstitialAdManager
+import com.bih.applicationsmurfforyou.presentation.composeable.LoadingState
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
+import com.bih.applicationsmurfforyou.presentation.explore.LoadingState
 import java.io.File
-
 
 @Composable
 fun SmurfScreen(
-    viewModel: SmurfViewModel = hiltViewModel(),
+    viewModel: SmurfifyViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
     SmurfTheme {
         BackHandler(onBack = onBack)
         val context = LocalContext.current
+        val activity = context as? Activity
         val uiState by viewModel.uiState.collectAsState()
         var lastImageUri by remember { mutableStateOf<Uri?>(null) }
+
+        val adManager = remember { InterstitialAdManager(context) }
+
+        // Listen for events from the ViewModel to show the ad
+        LaunchedEffect(Unit) {
+            viewModel.eventFlow.collect { event ->
+                when (event) {
+                    is SmurfifyEvent.ShowAd -> {
+                        activity?.let { adManager.showAd(it) }
+                    }
+                }
+            }
+        }
 
         val cameraImageUri = remember {
             val imagesDir = File(context.cacheDir, "images").apply { mkdirs() }
@@ -108,7 +117,6 @@ fun SmurfScreen(
                 )
                 .padding(16.dp)
         ) {
-            // Spacer to push the title down from the top edge
             Spacer(modifier = Modifier.height(48.dp))
 
             Text(
@@ -148,38 +156,8 @@ fun SmurfScreen(
                 onRefreshClick = { lastImageUri?.let { viewModel.onImageChosen(it) } }
             )
 
-            // Add spacer to push button up from the bottom navigation bar
             Spacer(modifier = Modifier.height(48.dp))
         }
-    }
-}
-
-@Composable
-fun LoadingState() {
-    val alpha = remember { Animatable(0.5f) }
-    LaunchedEffect(Unit) {
-        alpha.animateTo(
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 1000, easing = LinearEasing),
-                repeatMode = RepeatMode.Reverse
-            )
-        )
-    }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(80.dp),
-            strokeWidth = 8.dp,
-            color = MaterialTheme.colorScheme.background
-        )
-        Text(
-            text = "Smurfifying...",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.alpha(alpha.value)
-        )
     }
 }
 
