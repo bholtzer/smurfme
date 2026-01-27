@@ -1,6 +1,5 @@
 package com.bih.applicationsmurfforyou.presentation.navigation
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -9,7 +8,8 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
- import androidx.navigation.compose.composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bih.applicationsmurfforyou.presentation.explore.ExploreScreen
 import com.bih.applicationsmurfforyou.presentation.openscreen.OpenScreen
@@ -18,13 +18,11 @@ import com.bih.applicationsmurfforyou.presentation.settings.PrivacyScreen
 import com.bih.applicationsmurfforyou.presentation.settings.TermsScreen
 import com.bih.applicationsmurfforyou.presentation.smurf_detail.SmurfDetailScreen
 import com.bih.applicationsmurfforyou.presentation.smurfify.SmurfScreen
-import com.google.accompanist.navigation.animation.AnimatedNavHost
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = NavRoutes.OPEN_SCREEN,
         enterTransition = {
@@ -67,7 +65,7 @@ fun AppNavGraph(navController: NavHostController) {
             ExploreScreen(
                 onNavigateToSmurfify = { navController.navigate(NavRoutes.SMURFIFY) },
                 onSmurfClick = { smurfName -> navController.navigate(NavRoutes.smurfDetail(smurfName)) },
-                onNavigateToLanguage = { /* TODO */ },
+                onNavigateToLanguage = { navController.navigate(NavRoutes.LANGUAGE_SETTINGS) },
                 onNavigateToPermissions = { navController.navigate(NavRoutes.PERMISSIONS) },
                 onNavigateToPrivacy = { navController.navigate(NavRoutes.PRIVACY_POLICY) },
                 onNavigateToTerms = { navController.navigate(NavRoutes.TERMS_CONDITIONS) }
