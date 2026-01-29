@@ -43,13 +43,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.bih.applicationsmurfforyou.R
 import com.bih.applicationsmurfforyou.presentation.ads.InterstitialAdManager
 import com.bih.applicationsmurfforyou.presentation.composeable.LoadingState
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
-import com.bih.applicationsmurfforyou.presentation.explore.LoadingState
 import java.io.File
 
 @Composable
@@ -97,10 +98,10 @@ fun SmurfScreen(
             }
         }
 
-        val cameraPermission = Manifest.permission.CAMERA
+        val cameraPermissionDeniedText = stringResource(id = R.string.camera_permission_denied)
         val requestPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) takePicture.launch(cameraImageUri)
-            else Toast.makeText(context, "Camera permission denied", Toast.LENGTH_SHORT).show()
+            else Toast.makeText(context, cameraPermissionDeniedText, Toast.LENGTH_SHORT).show()
         }
 
         Column(
@@ -120,7 +121,7 @@ fun SmurfScreen(
             Spacer(modifier = Modifier.height(48.dp))
 
             Text(
-                text = "Smurfify Yourself!",
+                text = stringResource(id = R.string.smurfify_title),
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
@@ -134,13 +135,13 @@ fun SmurfScreen(
             ) {
                 when (val result = uiState) {
                     is SmurfifyUiState.Idle -> {
-                        Text("Choose a photo to begin your transformation!", style = MaterialTheme.typography.bodyLarge)
+                        Text(stringResource(id = R.string.smurfify_prompt), style = MaterialTheme.typography.bodyLarge)
                     }
                     is SmurfifyUiState.Loading -> {
-                        LoadingState()
+                        LoadingState(text = stringResource(id = R.string.smurfify_loading))
                     }
                     is SmurfifyUiState.Error -> {
-                        Text("Error: ${result.message}", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.error)
+                        Text(stringResource(id = R.string.smurfify_error, result.message), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.error)
                     }
                     is SmurfifyUiState.Success -> {
                         result.bitmap?.let { SmurfImage(it) }
@@ -152,7 +153,7 @@ fun SmurfScreen(
                 isLoading = uiState is SmurfifyUiState.Loading,
                 isImageLoaded = uiState is SmurfifyUiState.Success,
                 onGalleryClick = { pickImage.launch("image/*") },
-                onCameraClick = { requestPermission.launch(cameraPermission) },
+                onCameraClick = { requestPermission.launch(Manifest.permission.CAMERA) },
                 onRefreshClick = { lastImageUri?.let { viewModel.onImageChosen(it) } }
             )
 
@@ -175,16 +176,16 @@ fun ActionButtons(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(onClick = onGalleryClick, enabled = !isLoading) {
-                Text("Pick from Gallery")
+                Text(stringResource(id = R.string.button_pick_gallery))
             }
             Button(onClick = onCameraClick, enabled = !isLoading) {
-                Text("Take Photo")
+                Text(stringResource(id = R.string.button_take_photo))
             }
         }
         if (isImageLoaded) {
             Spacer(modifier = Modifier.height(8.dp))
             IconButton(onClick = onRefreshClick, enabled = !isLoading) {
-                Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                Icon(Icons.Default.Refresh, contentDescription = stringResource(id = R.string.content_desc_refresh))
             }
         }
     }
@@ -202,7 +203,7 @@ fun SmurfImage(bitmap: Bitmap) {
     ) {
         Image(
             bitmap = bitmap.asImageBitmap(),
-            contentDescription = "Smurf result",
+            contentDescription = stringResource(id = R.string.content_desc_smurf_result),
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.Fit
         )

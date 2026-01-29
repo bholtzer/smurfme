@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Description
@@ -29,9 +28,6 @@ import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,6 +42,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,18 +53,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.bih.applicationsmurfforyou.R
 import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.presentation.composeable.LoadingState
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
@@ -84,7 +85,7 @@ fun ExploreScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Smurf Village") },
+                    title = { Text(stringResource(id = R.string.explore_title)) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -92,42 +93,41 @@ fun ExploreScreen(
                     ),
                     actions = {
                         IconButton(onClick = { showMenu = true }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(id = R.string.content_desc_more_options))
                         }
                         DropdownMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false }
                         ) {
-                            // Dynamic "Change Layout" menu item
                             DropdownMenuItem(
-                                text = { Text(if (isGridLayout) "List View" else "Grid View") },
+                                text = { Text(stringResource(if (isGridLayout) R.string.menu_list_view else R.string.menu_grid_view)) },
                                 onClick = { showMenu = false; viewModel.toggleLayout() },
                                 leadingIcon = {
                                     Icon(
                                         if (isGridLayout) Icons.AutoMirrored.Filled.ViewList else Icons.Filled.GridView,
-                                        contentDescription = "Change Layout"
+                                        contentDescription = stringResource(id = R.string.content_desc_change_layout)
                                     )
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Language") }, 
+                                text = { Text(stringResource(id = R.string.menu_language)) },
                                 onClick = { showMenu = false; onNavigateToLanguage() },
-                                leadingIcon = { Icon(Icons.Default.Language, contentDescription = "Language") }
+                                leadingIcon = { Icon(Icons.Default.Language, contentDescription = null) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Permissions") }, 
+                                text = { Text(stringResource(id = R.string.menu_permissions)) },
                                 onClick = { showMenu = false; onNavigateToPermissions() },
-                                leadingIcon = { Icon(Icons.Default.Shield, contentDescription = "Permissions") }
+                                leadingIcon = { Icon(Icons.Default.Shield, contentDescription = null) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Privacy Policy") }, 
+                                text = { Text(stringResource(id = R.string.menu_privacy_policy)) },
                                 onClick = { showMenu = false; onNavigateToPrivacy() },
-                                leadingIcon = { Icon(Icons.Default.PrivacyTip, contentDescription = "Privacy Policy") }
+                                leadingIcon = { Icon(Icons.Default.PrivacyTip, contentDescription = null) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Terms & Conditions") }, 
+                                text = { Text(stringResource(id = R.string.menu_terms)) },
                                 onClick = { showMenu = false; onNavigateToTerms() },
-                                leadingIcon = { Icon(Icons.Filled.Description, contentDescription = "Terms & Conditions") }
+                                leadingIcon = { Icon(Icons.Filled.Description, contentDescription = null) }
                             )
                         }
                     }
@@ -136,7 +136,11 @@ fun ExploreScreen(
         ) { paddingValues ->
             val uiState by viewModel.uiState.collectAsState()
             val isRefreshing = (uiState as? ExploreUiState.Loaded)?.isRefreshing ?: false
-            val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = { viewModel.onRefresh() })
+            val pullRefreshState = rememberPullToRefreshState()
+
+            if (pullRefreshState.isRefreshing) {
+                viewModel.onRefresh()
+            }
 
             Column(
                 modifier = Modifier
@@ -158,22 +162,21 @@ fun ExploreScreen(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .pullRefresh(pullRefreshState)
+                        .nestedScroll(pullRefreshState.nestedScrollConnection)
                 ) {
                     when (val state = uiState) {
                         is ExploreUiState.Loading -> {
-                            LoadingState(modifier = Modifier.align(Alignment.Center))
+                            LoadingState(modifier = Modifier.align(Alignment.Center), text = stringResource(id = R.string.explore_loading))
                         }
                         is ExploreUiState.Error -> {
                             Text(
-                                text = "Error: ${state.message}",
+                                text = stringResource(id = R.string.explore_error, state.message),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         }
                         is ExploreUiState.Loaded -> {
-                            // Conditionally render Grid or List
                             if(isGridLayout) {
                                 LazyVerticalGrid(
                                     columns = GridCells.Adaptive(minSize = 128.dp),
@@ -205,8 +208,7 @@ fun ExploreScreen(
                         is ExploreUiState.Idle -> {}
                     }
 
-                    PullRefreshIndicator(
-                        refreshing = isRefreshing,
+                    PullToRefreshContainer(
                         state = pullRefreshState,
                         modifier = Modifier.align(Alignment.TopCenter)
                     )
@@ -218,7 +220,7 @@ fun ExploreScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onNavigateToSmurfify
                 ) {
-                    Text("Create Your Own Smurf")
+                    Text(stringResource(id = R.string.button_create_smurf))
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -294,25 +296,5 @@ fun SmurfCharacterCard(character: Smurf, onClick: () -> Unit) {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun LoadingState(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(80.dp),
-            strokeWidth = 8.dp,
-            color = MaterialTheme.colorScheme.background
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Loading Village...",
-            style = MaterialTheme.typography.titleLarge
-        )
     }
 }

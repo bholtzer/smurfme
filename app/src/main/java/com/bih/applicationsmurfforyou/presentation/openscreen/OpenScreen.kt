@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bih.applicationsmurfforyou.R
@@ -51,7 +52,7 @@ fun OpenScreen(
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Image(
             painter = painterResource(id = R.drawable.open_screen),
-            contentDescription = "Smurf Village background",
+            contentDescription = stringResource(id = R.string.content_desc_open_screen_bg),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
@@ -73,7 +74,6 @@ private fun LoadingProgressIndicator(progress: Float) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         CircularProgressIndicator(
-            progress = { animatedProgress },
             modifier = Modifier.size(100.dp),
             strokeWidth = 8.dp,
             color = MaterialTheme.colorScheme.onPrimary,
@@ -81,7 +81,7 @@ private fun LoadingProgressIndicator(progress: Float) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "${(animatedProgress * 100).toInt()}%",
+            text = stringResource(id = R.string.loading_percentage, (animatedProgress * 100).toInt()),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimary
         )

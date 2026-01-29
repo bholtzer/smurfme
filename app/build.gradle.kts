@@ -59,70 +59,59 @@ android {
 
 
 dependencies {
-    implementation("androidx.datastore:datastore-preferences:1.1.1") // For persisting settings
-    implementation("com.google.android.gms:play-services-ads:23.1.0") 
-    implementation("androidx.compose.material:material-icons-extended:1.6.8")
-    implementation("androidx.compose.material:material:1.7.0-beta01")
-    implementation(libs.google.firebase.appcheck.playintegrity)
+    // Core & UI
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.compose)
 
+    // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
-    implementation(libs.material)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.activity.compose)
+    implementation(libs.material) // For M2 components if needed
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+    implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.firebase.ai)
-    implementation(platform(libs.firebase.bom))
-//    implementation(libs.accompanist.navigation.animation)
 
-    // Hilt
+    // Hilt (Dependency Injection)
     implementation(libs.hilt.android)
-    implementation(libs.firebase.crashlytics.buildtools)
-    implementation(libs.firebase.appcheck.playintegrity)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    // Firebase (Bill of Materials)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.ai)
     implementation(libs.firebase.storage.ktx)
     implementation(libs.firebase.database.ktx)
-    implementation(libs.androidx.ui.tooling.preview.android)
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.google.cloud.vertexai)
+    implementation(libs.google.firebase.appcheck.playintegrity)
+    implementation(libs.firebase.crashlytics.buildtools)
 
-    implementation(platform(libs.firebase.bom))      // you already have this
+    // Google Ads
+    implementation("com.google.android.gms:play-services-ads:23.1.0")
 
-    implementation(libs.tensorflow.lite)
-    implementation(libs.tensorflow.lite.support)
+    // Data & Settings
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
-
-    // For handling images
-    implementation(libs.androidx.core.ktx.v1150)
-    implementation(libs.coil)
-
-    kapt(libs.dagger.hilt.compiler)
-
-    //AI
-     implementation(libs.tasks.vision.image.generator)
-
-    implementation(libs.ktor.client.serialization)
-    implementation(libs.ktor.client.android)
-
-    // Use the correctly named reference
-    implementation(libs.androidx.appcompat)
-    // Retrofit / OkHttp
+    // Networking
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.retrofit.gson)
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.serialization)
 
-    // Coil
+    // Image Loading
     implementation(libs.coil.compose)
 
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.storage.ktx)
-    implementation(libs.firebase.database.ktx)
+    // AI & ML
+    implementation(libs.google.cloud.vertexai)
+    implementation(libs.tasks.vision.image.generator)
+    implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite.support)
 
+    // Misc
     implementation(libs.protobuf.javalite)
-
 }
 
 kapt {

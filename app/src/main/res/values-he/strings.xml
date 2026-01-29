@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">דרדספוריו</string>
+    <string name="smurfify_title">דרדס את עצמך!</string>
+    <string name="smurfify_prompt">בחר תמונה כדי להתחיל את השינוי!</string>
+    <string name="smurfify_loading">מדרדס...</string>
+    <string name="smurfify_error">שגיאה: %1$s</string>
+    <string name="camera_permission_denied">הרשאת מצלמה נדחתה</string>
+    <string name="button_pick_gallery">בחר מהגלריה</string>
+    <string name="button_take_photo">צלם תמונה</string>
+    <string name="content_desc_refresh">רענן</string>
+    <string name="content_desc_smurf_result">התמונה המדורדסת שלך</string>
+    <string name="explore_title">כפר הדרדסים</string>
+    <string name="explore_loading">טוען את הכפר...</string>
+    <string name="explore_error">שגיאה: %1$s</string>
+    <string name="button_create_smurf">צור דרדס משלך</string>
+    <string name="menu_list_view">תצוגת רשימה</string>
+    <string name="menu_grid_view">תצוגת רשת</string>
+    <string name="menu_language">שפה</string>
+    <string name="menu_permissions">הרשאות</string>
+    <string name="menu_privacy_policy">מדיניות פרטיות</string>
+    <string name="menu_terms">תנאים והגבלות</string>
+    <string name="content_desc_more_options">אפשרויות נוספות</string>
+    <string name="content_desc_change_layout">שנה פריסה</string>
+    <string name="content_desc_open_screen_bg">רקע כפר הדרדסים</string>
+    <string name="loading_percentage">%1$d%%</string>
+    <string name="privacy_policy_title">מדיניות פרטיות</string>
+    <string name="privacy_policy_content">זהו תוכן מדיניות הפרטיות.</string>
+    <string name="terms_title">תנאים והגבלות</string>
+    <string name="terms_content">זהו תוכן התנאים וההגבלות.</string>
+    <string name="permissions_title">הרשאות</string>
+    <string name="permissions_content">מסך זה יסביר את ההרשאות שהאפליקציה משתמשת בהן.</string>
+    <string name="content_desc_back">חזור</string>
+</resources>

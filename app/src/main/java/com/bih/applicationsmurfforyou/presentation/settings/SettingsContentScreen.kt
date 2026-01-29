@@ -15,29 +15,31 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.bih.applicationsmurfforyou.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrivacyScreen(onBack: () -> Unit) {
-    SettingsScaffold("Privacy Policy", onBack) {
-        Text("This is the Privacy Policy content.")
+    SettingsScaffold(stringResource(id = R.string.privacy_policy_title), onBack) {
+        Text(stringResource(id = R.string.privacy_policy_content))
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TermsScreen(onBack: () -> Unit) {
-    SettingsScaffold("Terms & Conditions", onBack) {
-        Text("This is the Terms & Conditions content.")
+    SettingsScaffold(stringResource(id = R.string.terms_title), onBack) {
+        Text(stringResource(id = R.string.terms_content))
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionsScreen(onBack: () -> Unit) {
-    SettingsScaffold("Permissions", onBack) {
-        Text("This screen will explain the permissions the app uses.")
+    SettingsScaffold(stringResource(id = R.string.permissions_title), onBack) {
+        Text(stringResource(id = R.string.permissions_content))
     }
 }
 
@@ -55,7 +57,7 @@ private fun SettingsScaffold(title: String, onBack: () -> Unit, content: @Compos
                 ),
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(id = R.string.content_desc_back))
                     }
                 }
             )

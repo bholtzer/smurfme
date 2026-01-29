@@ -1,8 +1,47 @@
 <resources>
     <string name="app_name">Smurf4U</string>
+
+    <!-- Existing Strings -->
     <string name="selected_smurf">Selected Smurf</string>
     <string name="choose_your_smurf_image">Photo</string>
     <string name="smurf_image">Smurf Image</string>
     <string name="smurf_me">Smurf Me</string>
     <string name="title_activity_smurfify_screen">SmurfifyScreen</string>
+
+    <!-- Strings for Smurfify Screen -->
+    <string name="smurfify_title">Smurfify Yourself!</string>
+    <string name="smurfify_prompt">Choose a photo to begin your transformation!</string>
+    <string name="smurfify_loading">Smurfifying...</string>
+    <string name="smurfify_error">Error: %1$s</string>
+    <string name="camera_permission_denied">Camera permission denied</string>
+    <string name="button_pick_gallery">Pick from Gallery</string>
+    <string name="button_take_photo">Take Photo</string>
+    <string name="content_desc_refresh">Refresh</string>
+    <string name="content_desc_smurf_result">Your smurfified image</string>
+
+    <!-- Strings for Explore Screen -->
+    <string name="explore_title">Smurf Village</string>
+    <string name="explore_loading">Loading Village...</string>
+    <string name="explore_error">Error: %1$s</string>
+    <string name="button_create_smurf">Create Your Own Smurf</string>
+    <string name="menu_list_view">List View</string>
+    <string name="menu_grid_view">Grid View</string>
+    <string name="menu_language">Language</string>
+    <string name="menu_permissions">Permissions</string>
+    <string name="menu_privacy_policy">Privacy Policy</string>
+    <string name="menu_terms">Terms &amp; Conditions</string>
+    <string name="content_desc_more_options">More options</string>
+    <string name="content_desc_change_layout">Change Layout</string>
+    
+    <!-- Strings for Settings & Other Screens -->
+    <string name="content_desc_open_screen_bg">A vibrant, welcoming image of the Smurf village.</string>
+    <string name="loading_percentage">%1$d%%</string>
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_content">This is where the detailed privacy policy of the application will be displayed.</string>
+    <string name="terms_title">Terms &amp; Conditions</string>
+    <string name="terms_content">This is where the terms and conditions for using the application will be displayed.</string>
+    <string name="permissions_title">Permissions</string>
+    <string name="permissions_content">This screen explains why the app needs certain permissions, such as Camera for the Smurfify feature.</string>
+    <string name="content_desc_back">Back</string>
+
 </resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">سنفورلك</string>
+    <string name="smurfify_title">سنفر نفسك!</string>
+    <string name="smurfify_prompt">اختر صورة لبدء تحويلك!</string>
+    <string name="smurfify_loading">جاري السنفرة...</string>
+    <string name="smurfify_error">خطأ: %1$s</string>
+    <string name="camera_permission_denied">تم رفض إذن الكاميرا</string>
+    <string name="button_pick_gallery">اختر من المعرض</string>
+    <string name="button_take_photo">التقط صورة</string>
+    <string name="content_desc_refresh">تحديث</string>
+    <string name="content_desc_smurf_result">صورتك المسنفرة</string>
+    <string name="explore_title">قرية السنافر</string>
+    <string name="explore_loading">جاري تحميل القرية...</string>
+    <string name="explore_error">خطأ: %1$s</string>
+    <string name="button_create_smurf">اصنع سنفورك الخاص</string>
+    <string name="menu_list_view">عرض القائمة</string>
+    <string name="menu_grid_view">عرض الشبكة</string>
+    <string name="menu_language">اللغة</string>
+    <string name="menu_permissions">الأذونات</string>
+    <string name="menu_privacy_policy">سياسة الخصوصية</string>
+    <string name="menu_terms">الشروط والأحكام</string>
+    <string name="content_desc_more_options">المزيد من الخيارات</string>
+    <string name="content_desc_change_layout">تغيير التخطيط</string>
+    <string name="content_desc_open_screen_bg">خلفية قرية السنافر</string>
+    <string name="loading_percentage">%1$d%%</string>
+    <string name="privacy_policy_title">سياسة الخصوصية</string>
+    <string name="privacy_policy_content">هذا هو محتوى سياسة الخصوصية.</string>
+    <string name="terms_title">الشروط والأحكام</string>
+    <string name="terms_content">هذا هو محتوى الشروط والأحكام.</string>
+    <string name="permissions_title">الأذونات</string>
+    <string name="permissions_content">ستشرح هذه الشاشة الأذونات التي يستخدمها التطبيق.</string>
+    <string name="content_desc_back">عودة</string>
+</resources>

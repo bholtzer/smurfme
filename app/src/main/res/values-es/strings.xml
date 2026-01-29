@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PitufoParaTi</string>
+    <string name="smurfify_title">¡Pitufízate!</string>
+    <string name="smurfify_prompt">¡Elige una foto para comenzar tu transformación!</string>
+    <string name="smurfify_loading">Pitufando...</string>
+    <string name="smurfify_error">Error: %1$s</string>
+    <string name="camera_permission_denied">Permiso de cámara denegado</string>
+    <string name="button_pick_gallery">Elegir de la galería</string>
+    <string name="button_take_photo">Tomar foto</string>
+    <string name="content_desc_refresh">Refrescar</string>
+    <string name="content_desc_smurf_result">Tu imagen pitufada</string>
+    <string name="explore_title">Aldea Pitufa</string>
+    <string name="explore_loading">Cargando aldea...</string>
+    <string name="explore_error">Error: %1$s</string>
+    <string name="button_create_smurf">Crea tu propio Pitufo</string>
+    <string name="menu_list_view">Vista de lista</string>
+    <string name="menu_grid_view">Vista de cuadrícula</string>
+    <string name="menu_language">Idioma</string>
+    <string name="menu_permissions">Permisos</string>
+    <string name="menu_privacy_policy">Política de privacidad</string>
+    <string name="menu_terms">Términos y condiciones</string>
+    <string name="content_desc_more_options">Más opciones</string>
+    <string name="content_desc_change_layout">Cambiar diseño</string>
+    <string name="content_desc_open_screen_bg">Fondo de la Aldea Pitufa</string>
+    <string name="loading_percentage">%1$d%%</string>
+    <string name="privacy_policy_title">Política de privacidad</string>
+    <string name="privacy_policy_content">Este es el contenido de la Política de privacidad.</string>
+    <string name="terms_title">Términos y condiciones</string>
+    <string name="terms_content">Este es el contenido de los Términos y condiciones.</string>
+    <string name="permissions_title">Permisos</string>
+    <string name="permissions_content">Esta pantalla explicará los permisos que utiliza la aplicación.</string>
+    <string name="content_desc_back">Atrás</string>
+</resources>

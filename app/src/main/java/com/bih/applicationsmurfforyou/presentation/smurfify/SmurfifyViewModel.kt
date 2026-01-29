@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.min
 
 sealed class SmurfifyEvent {
     object ShowAd : SmurfifyEvent()
@@ -50,29 +51,33 @@ class SmurfifyViewModel @Inject constructor(
                 try {
                     _uiState.value = SmurfifyUiState.Loading
 
-                    val bitmap = uri.toBitmap(context)
+                    val originalBitmap = uri.toBitmap(context)
+                    // --- PERFORMANCE FIX: Scale the bitmap down before sending to the AI --- 
+                    val scaledBitmap = originalBitmap.scale(1024)
 
                     val model = Firebase.ai(
                         backend = GenerativeBackend.googleAI()
                     ).generativeModel(
-                        modelName = "gemini-1.5-flash"
+                        // --- MODEL FIX: Use the latest, recommended model ---
+                        modelName = "gemini-2.5-flash-lite"
                     )
 
+                    // --- QUALITY FIX: Advanced, high-quality prompt --- 
                     val prompt = content {
-                        image(bitmap)
+                        image(scaledBitmap)
                         text(
                             """
-                            Your main goal is to transform the person in the image into a **cute, 3D animated Smurf character** while preserving their recognizable facial features.
+                            Your primary goal is to transform the person (or people) in this image into a cute, 3D animated Smurf character. The result should be a high-quality, photorealistic digital painting.
 
-                            --- MANDATORY RULES ---
-                            1.  **CUTE CARICATURE OF THE FACE:** The Smurf's face **MUST** be a *cute caricature* of the person in the image. It is critical to keep their unique facial structure (mouth, nose shape, smile) so they are still recognizable. **DO NOT** use a generic Smurf face. The goal is to see *their* face, but in a cute, cartoon Smurf style.
-                            2.  **ICONIC SMURF HAT:** The character **MUST** be wearing the classic large, floppy, white Smurf hat.
+                            --- CRITICAL RULES ---
+                            1.  **PRESERVE IDENTITY:** This is the most important rule. The Smurf's face MUST be a recognizable caricature of the person in the image. Keep their unique facial structure (face shape, mouth, nose, smile), gender, and approximate age. If there are accessories like glasses or beards, they MUST be included in the Smurf version.
+                            2.  **HANDLE MULTIPLE PEOPLE:** If there is more than one person, transform EACH person into a unique Smurf, preserving their individual features.
+                            3.  **CLASSIC SMURF LOOK:** Every character must have smooth, solid blue skin and a classic, large, white Smurf hat.
 
-                            --- STYLE & APPEARANCE ---
-                            - **Overall Style:** Modern 3D animation (like Pixar or Dreamworks), with a focus on being cute and appealing.
-                            - **Eyes:** Transform the eyes to be large, white, and expressive in a classic cartoon style, fitting the person's original eye shape and position.
-                            - **Skin:** The skin must be smooth, solid blue, with no human textures.
-                            - **Background:** Do not change the original background.
+                            --- STYLE ---
+                            - **Overall Style:** Modern 3D animation (like a character from a Pixar or Dreamworks movie), with a focus on being cute and appealing.
+                            - **Eyes:** Transform the eyes to be large, white, and expressive in a classic cartoon style, but they should follow the original person's eye shape and position.
+                            - **Background:** DO NOT change the original background of the image.
                             """
                         )
                     }
@@ -102,5 +107,20 @@ class SmurfifyViewModel @Inject constructor(
             @Suppress("DEPRECATION")
             MediaStore.Images.Media.getBitmap(context.contentResolver, this)
         }
+    }
+
+    // --- PERFORMANCE FIX HELPER --- 
+    private fun Bitmap.scale(maxSize: Int): Bitmap {
+        val originalWidth = this.width
+        val originalHeight = this.height
+        if (originalWidth <= maxSize && originalHeight <= maxSize) {
+            return this
+        }
+
+        val scaleFactor = min(maxSize.toFloat() / originalWidth, maxSize.toFloat() / originalHeight)
+        val newWidth = (originalWidth * scaleFactor).toInt()
+        val newHeight = (originalHeight * scaleFactor).toInt()
+
+        return Bitmap.createScaledBitmap(this, newWidth, newHeight, true)
     }
 }
