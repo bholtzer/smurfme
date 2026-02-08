@@ -8,7 +8,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.AnimatedNavHost
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bih.applicationsmurfforyou.presentation.explore.ExploreScreen
@@ -22,7 +22,7 @@ import com.bih.applicationsmurfforyou.presentation.smurfify.SmurfScreen
 @Composable
 fun AppNavGraph(navController: NavHostController) {
 
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = NavRoutes.OPEN_SCREEN,
         enterTransition = {

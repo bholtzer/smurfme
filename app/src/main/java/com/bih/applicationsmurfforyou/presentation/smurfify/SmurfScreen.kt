@@ -72,7 +72,7 @@ fun SmurfScreen(
             viewModel.eventFlow.collect { event ->
                 when (event) {
                     is SmurfifyEvent.ShowAd -> {
-                        activity?.let { adManager.showAd(it) }
+                        activity?.let { adManager.loadAndShowAd(it) }
                     }
                 }
             }

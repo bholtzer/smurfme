@@ -45,6 +45,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -138,8 +139,16 @@ fun ExploreScreen(
             val isRefreshing = (uiState as? ExploreUiState.Loaded)?.isRefreshing ?: false
             val pullRefreshState = rememberPullToRefreshState()
 
-            if (pullRefreshState.isRefreshing) {
-                viewModel.onRefresh()
+            // This effect handles the refresh logic correctly
+            LaunchedEffect(pullRefreshState.isRefreshing) {
+                if (pullRefreshState.isRefreshing) {
+                    viewModel.onRefresh()
+                }
+            }
+            LaunchedEffect(isRefreshing) {
+                if (!isRefreshing) {
+                    pullRefreshState.endRefresh()
+                }
             }
 
             Column(

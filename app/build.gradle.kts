@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt)
+     alias(libs.plugins.hilt)
     kotlin("kapt")
 
 }
@@ -66,9 +66,9 @@ dependencies {
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.material3)
+    //implementation(libs.androidx.navigation.animation)
     implementation(libs.material) // For M2 components if needed
-    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -76,6 +76,7 @@ dependencies {
 
     // Hilt (Dependency Injection)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.compose.material3)
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
