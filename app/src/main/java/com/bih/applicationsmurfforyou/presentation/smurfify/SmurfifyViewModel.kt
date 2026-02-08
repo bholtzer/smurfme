@@ -41,61 +41,65 @@ class SmurfifyViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<SmurfifyEvent>()
     val eventFlow: SharedFlow<SmurfifyEvent> = _eventFlow.asSharedFlow()
 
+    private var chosenImageUri: Uri? = null
+
+    // Step 1: User chooses an image. We save the URI and trigger the ad.
     fun onImageChosen(uri: Uri) {
+        chosenImageUri = uri
         viewModelScope.launch {
-            // Immediately request to show an ad
             _eventFlow.emit(SmurfifyEvent.ShowAd)
+        }
+    }
 
-            // Start the AI image generation in the background
-            launch {
-                try {
-                    _uiState.value = SmurfifyUiState.Loading
+    // Step 2: Ad is dismissed. Now we process the image.
+    fun processSmurfImage() {
+        val uri = chosenImageUri ?: return // Safety check
 
-                    val originalBitmap = uri.toBitmap(context)
-                    // --- PERFORMANCE FIX: Scale the bitmap down before sending to the AI --- 
-                    val scaledBitmap = originalBitmap.scale(1024)
+        viewModelScope.launch {
+            try {
+                _uiState.value = SmurfifyUiState.Loading
 
-                    val model = Firebase.ai(
-                        backend = GenerativeBackend.googleAI()
-                    ).generativeModel(
-                        // --- MODEL FIX: Use the latest, recommended model ---
-                        modelName = "gemini-2.5-flash-lite"
+                val originalBitmap = uri.toBitmap(context)
+                val scaledBitmap = originalBitmap.scale(1024)
+
+                val model = Firebase.ai(
+                    backend = GenerativeBackend.googleAI()
+                ).generativeModel(
+                    modelName = "gemini-1.5-pro-latest"
+                )
+
+                val prompt = content {
+                    image(scaledBitmap)
+                    text(
+                        """
+                        Your primary goal is to transform the person (or people) in this image into a cute, 3D animated Smurf character. The result should be a high-quality, photorealistic digital painting.
+
+                        --- CRITICAL RULES ---
+                        1.  **PRESERVE IDENTITY:** This is the most important rule. The Smurf's face MUST be a recognizable caricature of the person in the image. Keep their unique facial structure (face shape, mouth, nose, smile), gender, and approximate age. If there are accessories like glasses or beards, they MUST be included in the Smurf version.
+                        2.  **HANDLE MULTIPLE PEOPLE:** If there is more than one person, transform EACH person into a unique Smurf, preserving their individual features.
+                        3.  **CLASSIC SMURF LOOK:** Every character must have smooth, solid blue skin and a classic, large, white Smurf hat.
+
+                        --- STYLE ---
+                        - **Overall Style:** Modern 3D animation (like a character from a Pixar or Dreamworks movie), with a focus on being cute and appealing.
+                        - **Eyes:** Transform the eyes to be large, white, and expressive in a classic cartoon style, but they should follow the original person's eye shape and position.
+                        - **Background:** DO NOT change the original background of the image.
+                        """
                     )
-
-                    // --- QUALITY FIX: Advanced, high-quality prompt --- 
-                    val prompt = content {
-                        image(scaledBitmap)
-                        text(
-                            """
-                            Your primary goal is to transform the person (or people) in this image into a cute, 3D animated Smurf character. The result should be a high-quality, photorealistic digital painting.
-
-                            --- CRITICAL RULES ---
-                            1.  **PRESERVE IDENTITY:** This is the most important rule. The Smurf's face MUST be a recognizable caricature of the person in the image. Keep their unique facial structure (face shape, mouth, nose, smile), gender, and approximate age. If there are accessories like glasses or beards, they MUST be included in the Smurf version.
-                            2.  **HANDLE MULTIPLE PEOPLE:** If there is more than one person, transform EACH person into a unique Smurf, preserving their individual features.
-                            3.  **CLASSIC SMURF LOOK:** Every character must have smooth, solid blue skin and a classic, large, white Smurf hat.
-
-                            --- STYLE ---
-                            - **Overall Style:** Modern 3D animation (like a character from a Pixar or Dreamworks movie), with a focus on being cute and appealing.
-                            - **Eyes:** Transform the eyes to be large, white, and expressive in a classic cartoon style, but they should follow the original person's eye shape and position.
-                            - **Background:** DO NOT change the original background of the image.
-                            """
-                        )
-                    }
-
-                    val response = model.generateContent(prompt)
-                    val imageBitmap = response.candidates
-                        .firstOrNull()
-                        ?.content
-                        ?.parts
-                        ?.firstNotNullOfOrNull { it.asImageOrNull() }
-                        ?: throw IllegalStateException("No image returned from model")
-
-                    _uiState.value = SmurfifyUiState.Success(imageBitmap)
-
-                } catch (e: Exception) {
-                    Log.e("SmurfifyViewModel", "Smurfify error: ${e.message}")
-                    _uiState.value = SmurfifyUiState.Error(e.message.toString())
                 }
+
+                val response = model.generateContent(prompt)
+                val imageBitmap = response.candidates
+                    .firstOrNull()
+                    ?.content
+                    ?.parts
+                    ?.firstNotNullOfOrNull { it.asImageOrNull() }
+                    ?: throw IllegalStateException("No image returned from model")
+
+                _uiState.value = SmurfifyUiState.Success(imageBitmap)
+
+            } catch (e: Exception) {
+                Log.e("SmurfifyViewModel", "Smurfify error: ${e.message}")
+                _uiState.value = SmurfifyUiState.Error(e.message.toString())
             }
         }
     }
@@ -109,7 +113,6 @@ class SmurfifyViewModel @Inject constructor(
         }
     }
 
-    // --- PERFORMANCE FIX HELPER --- 
     private fun Bitmap.scale(maxSize: Int): Bitmap {
         val originalWidth = this.width
         val originalHeight = this.height

@@ -63,7 +63,6 @@ fun SmurfScreen(
         val context = LocalContext.current
         val activity = context as? Activity
         val uiState by viewModel.uiState.collectAsState()
-        var lastImageUri by remember { mutableStateOf<Uri?>(null) }
 
         val adManager = remember { InterstitialAdManager(context) }
 
@@ -72,7 +71,13 @@ fun SmurfScreen(
             viewModel.eventFlow.collect { event ->
                 when (event) {
                     is SmurfifyEvent.ShowAd -> {
-                        activity?.let { adManager.loadAndShowAd(it) }
+                        activity?.let {
+                            adManager.loadAndShowAd(it) {
+                                // This callback is guaranteed to run after the ad is dismissed or fails.
+                                // Now, we start the image processing.
+                                viewModel.processSmurfImage()
+                            }
+                        }
                     }
                 }
             }
@@ -86,14 +91,12 @@ fun SmurfScreen(
 
         val takePicture = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
-                lastImageUri = cameraImageUri
                 viewModel.onImageChosen(cameraImageUri)
             }
         }
 
         val pickImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                lastImageUri = it
                 viewModel.onImageChosen(it)
             }
         }
@@ -154,7 +157,7 @@ fun SmurfScreen(
                 isImageLoaded = uiState is SmurfifyUiState.Success,
                 onGalleryClick = { pickImage.launch("image/*") },
                 onCameraClick = { requestPermission.launch(Manifest.permission.CAMERA) },
-                onRefreshClick = { lastImageUri?.let { viewModel.onImageChosen(it) } }
+                onRefreshClick = { viewModel.processSmurfImage() } // Should re-process the last image
             )
 
             Spacer(modifier = Modifier.height(48.dp))
@@ -182,7 +185,7 @@ fun ActionButtons(
                 Text(stringResource(id = R.string.button_take_photo))
             }
         }
-        if (isImageLoaded) {
+        if (isImageLoaded) { // Only show refresh if there's an image
             Spacer(modifier = Modifier.height(8.dp))
             IconButton(onClick = onRefreshClick, enabled = !isLoading) {
                 Icon(Icons.Default.Refresh, contentDescription = stringResource(id = R.string.content_desc_refresh))
