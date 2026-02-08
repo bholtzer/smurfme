@@ -65,7 +65,8 @@ class SmurfifyViewModel @Inject constructor(
                 val model = Firebase.ai(
                     backend = GenerativeBackend.googleAI()
                 ).generativeModel(
-                    modelName = "gemini-1.5-pro-latest"
+                    // --- MODEL FIX: Use the latest, recommended model ---
+                    modelName = "gemini-1.5-flash-latest"
                 )
 
                 val prompt = content {
@@ -98,7 +99,7 @@ class SmurfifyViewModel @Inject constructor(
                 _uiState.value = SmurfifyUiState.Success(imageBitmap)
 
             } catch (e: Exception) {
-                Log.e("SmurfifyViewModel", "Smurfify error: ${e.message}")
+                Log.e("SmurfifyViewModel", "Smurfify error", e) // Improved logging
                 _uiState.value = SmurfifyUiState.Error(e.message.toString())
             }
         }
