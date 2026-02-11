@@ -65,8 +65,8 @@ class SmurfifyViewModel @Inject constructor(
                 val model = Firebase.ai(
                     backend = GenerativeBackend.googleAI()
                 ).generativeModel(
-                    // --- MODEL FIX: Use the latest, recommended model ---
-                    modelName = "gemini-1.5-flash-latest"
+                    // --- MODEL FIX: Reverting to the latest documented model name ---
+                    modelName = "gemini-1.5-pro-latest"
                 )
 
                 val prompt = content {
