@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "254760393697",
+    "firebase_url": "https://applicationsmurfforyou-default-rtdb.firebaseio.com",
     "project_id": "applicationsmurfforyou",
     "storage_bucket": "applicationsmurfforyou.firebasestorage.app"
   },

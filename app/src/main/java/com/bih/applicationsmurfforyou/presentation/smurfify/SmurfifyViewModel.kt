@@ -65,7 +65,7 @@ class SmurfifyViewModel @Inject constructor(
         }
     }
 
-    // Step 2: Ad is dismissed. Now we process the image.
+    // Step 2: Process the chosen image in the background.
     @OptIn(PublicPreviewAPI::class)
     fun processSmurfImage() {
         val uri = chosenImageUri ?: return // Safety check
@@ -163,7 +163,7 @@ class SmurfifyViewModel @Inject constructor(
                 " Blue skin, iconic white Smurf hat, white trousers, " +
                 "standing in a mushroom village, vibrant colors, 4K, 3D render, style of Peyo."
 
-        val text2D = "Edit this image to make it look like a smurf cartoon,Blue skin, iconic white Smurf hat, white trousers,style of Peyo"
+        val text2D = "Edit this image to make it look like a smurf cartoon,Blue skin, Smurf hat, white trousers,style of Peyo"
 
         val prompt = content {
             image(bitmap)

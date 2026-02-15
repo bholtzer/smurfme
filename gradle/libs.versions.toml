@@ -6,6 +6,7 @@ composeBom = "2024.06.00"
 hilt = "2.59.1"
 ksp = "2.3.5"
 datastore = "1.1.1"
+googleServicesVersion = "4.4.2"
 # --- Other Stable Versions ---
 playServicesAds = "24.9.0"
 material = "1.13.0"
@@ -36,6 +37,7 @@ uiToolingPreviewAndroid = "1.6.8"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
@@ -74,6 +76,6 @@ firebase-ai = { group = "com.google.firebase", name = "firebase-ai"}
 android-application = { id = "com.android.application", version.ref = "agp" }
 #kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServicesVersion" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

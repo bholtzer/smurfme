@@ -64,19 +64,17 @@ fun SmurfScreen(
         val activity = context as? Activity
         val uiState by viewModel.uiState.collectAsState()
 
-        val adManager = remember { InterstitialAdManager(context) }
+        val adManager = remember { activity?.let { InterstitialAdManager(it) } }
 
         // Listen for events from the ViewModel to show the ad
         LaunchedEffect(Unit) {
             viewModel.eventFlow.collect { event ->
                 when (event) {
                     is SmurfifyEvent.ShowAd -> {
-                        activity?.let {
-                            adManager.loadAndShowAd(it) {
-                                // This callback is guaranteed to run after the ad is dismissed or fails.
-                                // Now, we start the image processing.
-                                viewModel.processSmurfImage()
-                            }
+                        adManager?.showAd {
+                            // This callback is guaranteed to run after the ad is dismissed or fails.
+                            // Now, we start the image processing.
+                            viewModel.processSmurfImage()
                         }
                     }
                 }
