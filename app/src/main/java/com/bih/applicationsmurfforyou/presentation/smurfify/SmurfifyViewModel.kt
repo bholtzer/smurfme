@@ -57,15 +57,20 @@ class SmurfifyViewModel @Inject constructor(
 
     private var chosenImageUri: Uri? = null
 
-    // Step 1: User chooses an image. We save the URI and trigger the ad.
+    // Step 1: User chooses an image.
+    // We save the URI, trigger the ad, and start processing the image in the background.
     fun onImageChosen(uri: Uri) {
         chosenImageUri = uri
+        // Start processing the image in the background.
+        processSmurfImage()
+        // Also trigger the ad to show.
         viewModelScope.launch {
             _eventFlow.emit(SmurfifyEvent.ShowAd)
         }
     }
 
-    // Step 2: Process the chosen image in the background.
+    // Step 2: This function is now called immediately after an image is chosen.
+    // It runs the image transformation in a background coroutine.
     @OptIn(PublicPreviewAPI::class)
     fun processSmurfImage() {
         val uri = chosenImageUri ?: return // Safety check

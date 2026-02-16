@@ -73,8 +73,7 @@ fun SmurfScreen(
                     is SmurfifyEvent.ShowAd -> {
                         adManager?.showAd {
                             // This callback is guaranteed to run after the ad is dismissed or fails.
-                            // Now, we start the image processing.
-                            viewModel.processSmurfImage()
+                            // The image processing has already started in the background.
                         }
                     }
                 }
