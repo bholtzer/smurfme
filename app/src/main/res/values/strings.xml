@@ -32,16 +32,20 @@
     <string name="menu_terms">Terms &amp; Conditions</string>
     <string name="content_desc_more_options">More options</string>
     <string name="content_desc_change_layout">Change Layout</string>
-    
+
     <!-- Strings for Settings & Other Screens -->
     <string name="content_desc_open_screen_bg">A vibrant, welcoming image of the Smurf village.</string>
     <string name="loading_percentage">%1$d%%</string>
     <string name="privacy_policy_title">Privacy Policy</string>
-    <string name="privacy_policy_content">This is where the detailed privacy policy of the application will be displayed.</string>
     <string name="terms_title">Terms &amp; Conditions</string>
-    <string name="terms_content">This is where the terms and conditions for using the application will be displayed.</string>
     <string name="permissions_title">Permissions</string>
-    <string name="permissions_content">This screen explains why the app needs certain permissions, such as Camera for the Smurfify feature.</string>
+    <string name="permissions_content">Our Smurfify feature needs access to your camera so you can take a photo and transform yourself into a Smurf!\n\nWe use the photo only for the AI transformation and do not store it or share it with anyone.</string>
+    <string name="button_open_settings">Open Settings</string>
     <string name="content_desc_back">Back</string>
+
+    <!-- Network Error Strings -->
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="gargamel_content_desc">Gargamel, the enemy of the Smurfs</string>
+    <string name="gargamel_error_text">Gargamel has blocked the network!</string>
 
 </resources>

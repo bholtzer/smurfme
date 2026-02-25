@@ -31,4 +31,8 @@
     <string name="permissions_title">الأذونات</string>
     <string name="permissions_content">ستشرح هذه الشاشة الأذونات التي يستخدمها التطبيق.</string>
     <string name="content_desc_back">عودة</string>
+    <!-- Network Error Strings -->
+    <string name="no_internet_connection">لا يوجد اتصال بالإنترنت</string>
+    <string name="gargamel_content_desc">شرشبيل، عدو السنافر</string>
+    <string name="gargamel_error_text">شرشبيل حجب الشبكة!</string>
 </resources>

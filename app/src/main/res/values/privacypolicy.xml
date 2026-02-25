@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="privacy_policy"><![CDATA[PRIVACY POLICY Last Updated: February 18, 2026
+
+1.  Children’s Privacy This App is directed to children under 13. We
+    comply with applicable child privacy laws including COPPA, GDPR-K,
+    and relevant Israeli privacy regulations.\n
+
+2.  Information We Collect We collect minimal data necessary to operate
+    the App, including:
+
+-   Device type and operating system
+-   App usage statistics
+-   Crash reports\n
+
+This information does not directly identify a child.\n
+
+3.  Advertising We use Google AdMob to serve contextual ads.
+    Personalized advertising is disabled for child-directed treatment.
+    AdMob may collect limited device identifiers for fraud prevention
+    and ad delivery.
+
+4.  AI Processing If images are uploaded:
+
+-   Images are processed to generate AI content.
+-   Images are not sold.
+-   Images are not used for advertising profiling.
+
+5.  How We Use Information We use collected data to:
+
+-   Operate and maintain the App
+-   Improve functionality
+-   Fix technical issues
+-   Deliver contextual advertisements
+
+6.  Data Sharing We do not sell children’s personal information. We may
+    share limited data with service providers such as Google AdMob and
+    Firebase solely to operate the App.
+
+7.  Parental Rights Parents or guardians may request data access or
+    deletion by contacting: Email: [your@email.com]
+
+8.  Data Retention We retain information only as long as necessary for
+    app functionality or legal compliance.
+
+9.  Security We implement reasonable safeguards to protect data, but no
+    system is completely secure.
+
+10. Changes to This Policy We may update this Privacy Policy
+    periodically. Updates will be reflected with a new “Last Updated”
+    date.]]></string>
+</resources>

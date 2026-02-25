@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bih.applicationsmurfforyou.presentation.explore.ExploreScreen
 import com.bih.applicationsmurfforyou.presentation.openscreen.OpenScreen
+import com.bih.applicationsmurfforyou.presentation.settings.LanguageScreen
 import com.bih.applicationsmurfforyou.presentation.settings.PermissionsScreen
 import com.bih.applicationsmurfforyou.presentation.settings.PrivacyScreen
 import com.bih.applicationsmurfforyou.presentation.settings.TermsScreen
@@ -89,5 +90,6 @@ fun AppNavGraph(navController: NavHostController) {
         composable(NavRoutes.PRIVACY_POLICY) { PrivacyScreen(onBack = { navController.popBackStack() }) }
         composable(NavRoutes.TERMS_CONDITIONS) { TermsScreen(onBack = { navController.popBackStack() }) }
         composable(NavRoutes.PERMISSIONS) { PermissionsScreen(onBack = { navController.popBackStack() }) }
+        composable(NavRoutes.LANGUAGE_SETTINGS) { LanguageScreen(onBack = { navController.popBackStack() }) }
     }
 }

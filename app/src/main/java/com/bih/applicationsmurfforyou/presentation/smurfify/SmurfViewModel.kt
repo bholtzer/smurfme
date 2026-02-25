@@ -38,6 +38,11 @@ class SmurfViewModel @Inject constructor(
     ).imagenModel("imagen-3.0-capability-001")
 
     fun onImageChosen(uri: Uri) {
+        if (uri == Uri.EMPTY) {
+            _uiState.value = SmurfifyUiState.Idle
+            return
+        }
+
         viewModelScope.launch {
             try {
                 _uiState.value = SmurfifyUiState.Loading

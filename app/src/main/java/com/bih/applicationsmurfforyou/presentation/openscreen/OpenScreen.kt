@@ -51,7 +51,7 @@ fun OpenScreen(
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Image(
-            painter = painterResource(id = R.drawable.open_screen),
+            painter = painterResource(id = R.drawable.openscreen),
             contentDescription = stringResource(id = R.string.content_desc_open_screen_bg),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop

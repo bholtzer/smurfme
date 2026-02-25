@@ -1,5 +1,9 @@
 package com.bih.applicationsmurfforyou.presentation.explore
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,9 +58,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -64,9 +70,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.bih.applicationsmurfforyou.R
+import com.bih.applicationsmurfforyou.data.util.ConnectivityObserver
 import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.presentation.composeable.LoadingState
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,6 +89,17 @@ fun ExploreScreen(
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val isGridLayout by viewModel.isGridLayout.collectAsState()
+    val smurfUiState by viewModel.smurfUiState.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val networkStatus by viewModel.networkStatus.collectAsState()
+    var smurfs by remember { mutableStateOf<List<Smurf>>(emptyList()) }
+
+    // Persist the list of smurfs across refreshes
+    LaunchedEffect(smurfUiState) {
+        if (smurfUiState is SmurfUiState.Success) {
+            smurfs = (smurfUiState as SmurfUiState.Success).smurfs
+        }
+    }
 
     SmurfTheme {
         Scaffold(
@@ -93,6 +112,12 @@ fun ExploreScreen(
                         actionIconContentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     actions = {
+                        IconButton(onClick = { viewModel.toggleLayout() }) {
+                            Icon(
+                                imageVector = if (isGridLayout) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
+                                contentDescription = stringResource(id = R.string.content_desc_change_layout)
+                            )
+                        }
                         IconButton(onClick = { showMenu = true }) {
                             Icon(Icons.Default.MoreVert, contentDescription = stringResource(id = R.string.content_desc_more_options))
                         }
@@ -100,16 +125,6 @@ fun ExploreScreen(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false }
                         ) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(if (isGridLayout) R.string.menu_list_view else R.string.menu_grid_view)) },
-                                onClick = { showMenu = false; viewModel.toggleLayout() },
-                                leadingIcon = {
-                                    Icon(
-                                        if (isGridLayout) Icons.AutoMirrored.Filled.ViewList else Icons.Filled.GridView,
-                                        contentDescription = stringResource(id = R.string.content_desc_change_layout)
-                                    )
-                                }
-                            )
                             DropdownMenuItem(
                                 text = { Text(stringResource(id = R.string.menu_language)) },
                                 onClick = { showMenu = false; onNavigateToLanguage() },
@@ -135,14 +150,11 @@ fun ExploreScreen(
                 )
             }
         ) { paddingValues ->
-            val uiState by viewModel.uiState.collectAsState()
-            val isRefreshing = (uiState as? ExploreUiState.Loaded)?.isRefreshing ?: false
             val pullRefreshState = rememberPullToRefreshState()
 
-            // This effect handles the refresh logic correctly
             LaunchedEffect(pullRefreshState.isRefreshing) {
                 if (pullRefreshState.isRefreshing) {
-                    viewModel.onRefresh()
+                    viewModel.loadSmurfs(forceRefresh = true)
                 }
             }
             LaunchedEffect(isRefreshing) {
@@ -151,42 +163,31 @@ fun ExploreScreen(
                 }
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.primary,
-                                MaterialTheme.colorScheme.surface,
-                                MaterialTheme.colorScheme.background
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primary,
+                                    MaterialTheme.colorScheme.surface,
+                                    MaterialTheme.colorScheme.background
+                                )
                             )
                         )
-                    )
-                    .padding(horizontal = 16.dp)
-            ) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .nestedScroll(pullRefreshState.nestedScrollConnection)
+                        .padding(horizontal = 16.dp)
                 ) {
-                    when (val state = uiState) {
-                        is ExploreUiState.Loading -> {
-                            LoadingState(modifier = Modifier.align(Alignment.Center), text = stringResource(id = R.string.explore_loading))
-                        }
-                        is ExploreUiState.Error -> {
-                            Text(
-                                text = stringResource(id = R.string.explore_error, state.message),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.error,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                        is ExploreUiState.Loaded -> {
-                            if(isGridLayout) {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .nestedScroll(pullRefreshState.nestedScrollConnection)
+                    ) {
+                        if (smurfs.isNotEmpty()) {
+                            if (isGridLayout) {
                                 LazyVerticalGrid(
                                     columns = GridCells.Adaptive(minSize = 128.dp),
                                     modifier = Modifier.fillMaxSize(),
@@ -194,8 +195,8 @@ fun ExploreScreen(
                                     verticalArrangement = Arrangement.spacedBy(16.dp),
                                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
-                                    items(state.smurfs) { character ->
-                                        SmurfCharacterCard(character = character) {
+                                    items(smurfs) { character ->
+                                        SmurfCharacterCard(character = character, isOnline = networkStatus == ConnectivityObserver.Status.Available) {
                                             character.name?.let { onSmurfClick(it) }
                                         }
                                     }
@@ -206,41 +207,115 @@ fun ExploreScreen(
                                     contentPadding = PaddingValues(vertical = 8.dp),
                                     verticalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
-                                    items(state.smurfs) { character ->
-                                        SmurfCharacterListItem(character = character) {
+                                    items(smurfs) { character ->
+                                        SmurfCharacterListItem(character = character, isOnline = networkStatus == ConnectivityObserver.Status.Available) {
                                             character.name?.let { onSmurfClick(it) }
                                         }
                                     }
                                 }
                             }
                         }
-                        is ExploreUiState.Idle -> {}
+
+                        when (val state = smurfUiState) {
+                            is SmurfUiState.Loading -> {
+                                if (smurfs.isEmpty()) {
+                                    LoadingState(modifier = Modifier.align(Alignment.Center), text = stringResource(id = R.string.explore_loading))
+                                }
+                            }
+                            is SmurfUiState.Error -> {
+                                GargamelError(message = state.message, showOverlay = smurfs.isNotEmpty())
+                            }
+                            is SmurfUiState.Success -> {
+                                if (state.smurfs.isEmpty()) {
+                                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                        Text("No Smurfs in the village. Pull down to refresh.")
+                                    }
+                                }
+                            }
+                        }
+
+                        PullToRefreshContainer(
+                            state = pullRefreshState,
+                            modifier = Modifier.align(Alignment.TopCenter)
+                        )
                     }
 
-                    PullToRefreshContainer(
-                        state = pullRefreshState,
-                        modifier = Modifier.align(Alignment.TopCenter)
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = onNavigateToSmurfify,
+                        enabled = networkStatus == ConnectivityObserver.Status.Available
+                    ) {
+                        Text(stringResource(id = R.string.button_create_smurf))
+                    }
+
+                    Spacer(modifier = Modifier.height(30.dp))
+                }
+
+                AnimatedVisibility(
+                    visible = networkStatus != ConnectivityObserver.Status.Available,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it }),
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.no_internet_connection),
+                        color = MaterialTheme.colorScheme.onError,
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.error)
+                            .padding(4.dp)
                     )
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = onNavigateToSmurfify
-                ) {
-                    Text(stringResource(id = R.string.button_create_smurf))
-                }
-
-                Spacer(modifier = Modifier.height(30.dp))
             }
         }
     }
 }
 
-// New composable for the List View item
 @Composable
-fun SmurfCharacterListItem(character: Smurf, onClick: () -> Unit) {
+fun GargamelError(message: String, showOverlay: Boolean) {
+    val villain = remember {
+        try {
+            if (Random.nextBoolean()) R.drawable.gargamel else R.drawable.azrael
+        } catch (e: Exception) {
+            R.drawable.gargamel // Fallback to gargamel if azrael is missing
+        }
+    }
+    val backgroundModifier = if (showOverlay) {
+        Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.7f))
+    } else {
+        Modifier.fillMaxSize()
+    }
+
+    Box(
+        modifier = backgroundModifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = villain),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            alpha = if (showOverlay) 0.3f else 1f
+        )
+        Text(
+            text = message,
+            style = MaterialTheme.typography.headlineMedium,
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+
+@Composable
+fun SmurfCharacterListItem(character: Smurf, isOnline: Boolean, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -253,10 +328,12 @@ fun SmurfCharacterListItem(character: Smurf, onClick: () -> Unit) {
             modifier = Modifier.padding(8.dp)
         ) {
             SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(character.imageUrl)
-                    .crossfade(true)
-                    .build(),
+                model = if (isOnline) {
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(character.imageUrl)
+                        .crossfade(true)
+                        .build()
+                } else null,
                 loading = { CircularProgressIndicator() },
                 contentDescription = character.name,
                 contentScale = ContentScale.Fit,
@@ -276,7 +353,7 @@ fun SmurfCharacterListItem(character: Smurf, onClick: () -> Unit) {
 }
 
 @Composable
-fun SmurfCharacterCard(character: Smurf, onClick: () -> Unit) {
+fun SmurfCharacterCard(character: Smurf, isOnline: Boolean, onClick: () -> Unit) {
     Card(
         modifier = Modifier.clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -284,11 +361,13 @@ fun SmurfCharacterCard(character: Smurf, onClick: () -> Unit) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(character.imageUrl)
-                    .crossfade(true)
-                    .size(256)
-                    .build(),
+                model = if (isOnline) {
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(character.imageUrl)
+                        .crossfade(true)
+                        .size(256)
+                        .build()
+                } else null,
                 loading = {
                     CircularProgressIndicator(modifier = Modifier.padding(32.dp))
                 },

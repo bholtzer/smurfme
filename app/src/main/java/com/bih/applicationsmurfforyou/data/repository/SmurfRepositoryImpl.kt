@@ -30,8 +30,10 @@ class SmurfRepositoryImpl @Inject constructor() : SmurfRepository {
             val snapshot = Firebase.database.reference.child("smurfs").get().await()
             val smurfs = snapshot.children.mapNotNull { it.getValue(Smurf::class.java) }
 
-            if (smurfs.isEmpty()) {
-                Log.w("SmurfRepository", "Firebase fetch succeeded but returned an empty list. Check that your 'Smurf' data class fields (name, description, imageUrl) EXACTLY match your Firebase Realtime Database JSON structure.")
+            if (smurfs.isEmpty() && snapshot.hasChildren()) {
+                val errorMessage = "Data mapping failed. Check that your 'Smurf' data class fields (name, description, imageUrl) EXACTLY match your Firebase Realtime Database JSON structure."
+                Log.e("SmurfRepository", errorMessage)
+                throw IllegalStateException(errorMessage)
             }
             
             cachedSmurfs = smurfs

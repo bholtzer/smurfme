@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SchlumpfFürDich</string>
+    <string name="selected_smurf">Ausgewählter Schlumpf</string>
+    <string name="choose_your_smurf_image">Foto</string>
+    <string name="smurf_image">Schlumpfbild</string>
+    <string name="smurf_me">Verschlumpf mich</string>
+    <string name="title_activity_smurfify_screen">Verschlumpf-Bildschirm</string>
+    <string name="smurfify_title">Verschlumpf dich!</string>
+    <string name="smurfify_prompt">Wähle ein Foto, um deine Verwandlung zu beginnen!</string>
+    <string name="smurfify_loading">Verschlumpfung läuft...</string>
+    <string name="smurfify_error">Fehler: %1$s</string>
+    <string name="camera_permission_denied">Kameraberechtigung verweigert</string>
+    <string name="button_pick_gallery">Aus der Galerie auswählen</string>
+    <string name="button_take_photo">Foto aufnehmen</string>
+    <string name="content_desc_refresh">Aktualisieren</string>
+    <string name="content_desc_smurf_result">Dein verschlumpftes Bild</string>
+    <string name="explore_title">Schlumpfhausen</string>
+    <string name="explore_loading">Dorf wird geladen...</string>
+    <string name="explore_error">Fehler: %1$s</string>
+    <string name="button_create_smurf">Erstelle deinen eigenen Schlumpf</string>
+    <string name="menu_list_view">Listenansicht</string>
+    <string name="menu_grid_view">Gitteransicht</string>
+    <string name="menu_language">Sprache</string>
+    <string name="menu_permissions">Berechtigungen</string>
+    <string name="menu_privacy_policy">Datenschutzrichtlinie</string>
+    <string name="menu_terms">Allgemeine Geschäftsbedingungen</string>
+    <string name="content_desc_more_options">Weitere Optionen</string>
+    <string name="content_desc_change_layout">Layout ändern</string>
+    <string name="content_desc_open_screen_bg">Hintergrund von Schlumpfhausen</string>
+    <string name="loading_percentage">%1$d%%</string>
+    <string name="privacy_policy_title">Datenschutzrichtlinie</string>
+    <string name="privacy_policy_content">Dies ist der Inhalt der Datenschutzrichtlinie.</string>
+    <string name="terms_title">Allgemeine Geschäftsbedingungen</string>
+    <string name="terms_content">Dies ist der Inhalt der Allgemeinen Geschäftsbedingungen.</string>
+    <string name="permissions_title">Berechtigungen</string>
+    <string name="permissions_content">Dieser Bildschirm erklärt die von der Anwendung verwendeten Berechtigungen.</string>
+    <string name="content_desc_back">Zurück</string>
+</resources>
