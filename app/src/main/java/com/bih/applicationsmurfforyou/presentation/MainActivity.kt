@@ -5,15 +5,11 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.bih.applicationsmurfforyou.domain.repository.SettingsRepository
 import com.bih.applicationsmurfforyou.presentation.navigation.AppNavGraph
-import com.bih.applicationsmurfforyou.presentation.ui.components.ErrorMessage
-import com.bih.applicationsmurfforyou.util.NetworkManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -24,9 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var settingsRepository: SettingsRepository
-
-    @Inject
-    lateinit var networkManager: NetworkManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,18 +34,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContent {
-            val isNetworkAvailable by networkManager.isNetworkAvailable.collectAsState()
-            if (isNetworkAvailable) {
-                SmurfApp()
-            } else {
-                ErrorMessage()
-            }
+            SmurfApp()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        networkManager.unregister()
     }
 }
 

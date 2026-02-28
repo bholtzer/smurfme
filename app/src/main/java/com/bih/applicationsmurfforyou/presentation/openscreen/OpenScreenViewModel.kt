@@ -52,7 +52,8 @@ class OpenScreenViewModel @Inject constructor(
                 val smurfs = fetchSmurfListWithRetries(maxRetries = 3)
 
                 if (smurfs.isEmpty()) {
-                    throw Exception("Failed to fetch character list. Check Firebase config and security rules.")
+                    _preloadState.value = PreloadState.Error("Failed to fetch character list. Check your internet connection.")
+                    return@launch
                 }
 
                 preloadImagesAndProceed(smurfs)

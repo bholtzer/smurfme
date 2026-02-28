@@ -50,11 +50,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bih.applicationsmurfforyou.R
-import com.bih.applicationsmurfforyou.data.util.ConnectivityObserver
 import com.bih.applicationsmurfforyou.presentation.ads.InterstitialAdManager
 import com.bih.applicationsmurfforyou.presentation.composeable.LoadingState
 import com.bih.applicationsmurfforyou.presentation.composeable.ui.theme.SmurfTheme
-import com.bih.applicationsmurfforyou.presentation.explore.GargamelError
+import com.bih.applicationsmurfforyou.presentation.ui.components.ErrorMessage
 import java.io.File
 
 @Composable
@@ -67,7 +66,6 @@ fun SmurfScreen(
         val context = LocalContext.current
         val activity = context as? Activity
         val uiState by viewModel.uiState.collectAsState()
-        val networkStatus by viewModel.networkStatus.collectAsState()
 
         val adManager = remember { activity?.let { InterstitialAdManager(it) } }
 
@@ -135,7 +133,7 @@ fun SmurfScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    when (val result = uiState) {
+                    when (val state = uiState) {
                         is SmurfifyUiState.Idle -> {
                             Text(stringResource(id = R.string.smurfify_prompt), style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
                         }
@@ -143,16 +141,16 @@ fun SmurfScreen(
                             LoadingState(text = stringResource(id = R.string.smurfify_loading))
                         }
                         is SmurfifyUiState.Error -> {
-                            GargamelError(message = result.message, showOverlay = false)
+                            ErrorMessage(message = state.message)
                         }
                         is SmurfifyUiState.Success -> {
-                            result.bitmap?.let { SmurfImage(it) }
+                            state.bitmap?.let { SmurfImage(it) }
                         }
                     }
                 }
 
                 ActionButtons(
-                    isLoading = uiState is SmurfifyUiState.Loading || networkStatus != ConnectivityObserver.Status.Available,
+                    isLoading = uiState is SmurfifyUiState.Loading,
                     isImageLoaded = uiState is SmurfifyUiState.Success,
                     onGalleryClick = { pickImage.launch("image/*") },
                     onCameraClick = { requestPermission.launch(Manifest.permission.CAMERA) },
@@ -160,24 +158,6 @@ fun SmurfScreen(
                 )
 
                 Spacer(modifier = Modifier.height(48.dp))
-            }
-
-            AnimatedVisibility(
-                visible = networkStatus != ConnectivityObserver.Status.Available,
-                enter = slideInVertically(initialOffsetY = { it }),
-                exit = slideOutVertically(targetOffsetY = { it }),
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.no_internet_connection),
-                    color = MaterialTheme.colorScheme.onError,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.error)
-                        .padding(4.dp)
-                )
             }
         }
     }

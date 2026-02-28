@@ -1,6 +1,5 @@
 package com.bih.applicationsmurfforyou.presentation.openscreen
 
-import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -21,12 +20,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bih.applicationsmurfforyou.R
+import com.bih.applicationsmurfforyou.presentation.ui.components.ErrorMessage
 
 @Composable
 fun OpenScreen(
@@ -34,32 +33,31 @@ fun OpenScreen(
     onPreloadComplete: () -> Unit
 ) {
     val preloadState by viewModel.preloadState.collectAsState()
-    val context = LocalContext.current
 
     LaunchedEffect(preloadState) {
-        when (val state = preloadState) {
-            is PreloadState.Success -> {
-                onPreloadComplete()
-            }
-            is PreloadState.Error -> {
-                Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
-                onPreloadComplete()
-            }
-            else -> { /* Do nothing while Idle or Loading */ }
+        if (preloadState is PreloadState.Success) {
+            onPreloadComplete()
         }
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Image(
-            painter = painterResource(id = R.drawable.openscreen),
-            contentDescription = stringResource(id = R.string.content_desc_open_screen_bg),
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        when (val state = preloadState) {
+            is PreloadState.Error -> {
+                ErrorMessage(message = state.message)
+            }
+            else -> {
+                Image(
+                    painter = painterResource(id = R.drawable.openscreen),
+                    contentDescription = stringResource(id = R.string.content_desc_open_screen_bg),
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
 
-        if (preloadState is PreloadState.Loading) {
-            val progress = (preloadState as PreloadState.Loading).progress
-            LoadingProgressIndicator(progress = progress / 100f)
+                if (preloadState is PreloadState.Loading) {
+                    val progress = (preloadState as PreloadState.Loading).progress
+                    LoadingProgressIndicator(progress = progress / 100f)
+                }
+            }
         }
     }
 }
