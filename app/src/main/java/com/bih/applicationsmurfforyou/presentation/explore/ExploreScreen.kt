@@ -85,7 +85,8 @@ fun ExploreScreen(
     onNavigateToLanguage: () -> Unit,
     onNavigateToPermissions: () -> Unit,
     onNavigateToPrivacy: () -> Unit,
-    onNavigateToTerms: () -> Unit
+    onNavigateToTerms: () -> Unit,
+    onNavigateToSmurfGallery: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val isGridLayout by viewModel.isGridLayout.collectAsState()
@@ -248,6 +249,13 @@ fun ExploreScreen(
                         enabled = networkStatus == ConnectivityObserver.Status.Available
                     ) {
                         Text(stringResource(id = R.string.button_create_smurf))
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = onNavigateToSmurfGallery
+                    ) {
+                        Text(stringResource(id = R.string.smurf_gallery_title))
                     }
 
                     Spacer(modifier = Modifier.height(30.dp))

@@ -5,6 +5,7 @@ object NavRoutes {
     const val EXPLORE = "explore"
     const val SMURFIFY = "smurfify"
     const val SMURF_DETAIL = "smurf_detail/{smurfName}"
+    const val SMURF_GALLERY = "smurf_gallery"
 
     // New Routes for Settings Content
     const val PRIVACY_POLICY = "privacy_policy"

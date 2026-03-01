@@ -19,6 +19,7 @@ import com.bih.applicationsmurfforyou.presentation.settings.PrivacyScreen
 import com.bih.applicationsmurfforyou.presentation.settings.TermsScreen
 import com.bih.applicationsmurfforyou.presentation.smurf_detail.SmurfDetailScreen
 import com.bih.applicationsmurfforyou.presentation.smurfify.SmurfScreen
+import com.bih.applicationsmurfforyou.presentation.smurfgallery.SmurfGalleryScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
@@ -69,7 +70,8 @@ fun AppNavGraph(navController: NavHostController) {
                 onNavigateToLanguage = { navController.navigate(NavRoutes.LANGUAGE_SETTINGS) },
                 onNavigateToPermissions = { navController.navigate(NavRoutes.PERMISSIONS) },
                 onNavigateToPrivacy = { navController.navigate(NavRoutes.PRIVACY_POLICY) },
-                onNavigateToTerms = { navController.navigate(NavRoutes.TERMS_CONDITIONS) }
+                onNavigateToTerms = { navController.navigate(NavRoutes.TERMS_CONDITIONS) },
+                onNavigateToSmurfGallery = { navController.navigate(NavRoutes.SMURF_GALLERY) }
             )
         }
 
@@ -84,6 +86,11 @@ fun AppNavGraph(navController: NavHostController) {
         // Smurfify (ai screen)
         composable(NavRoutes.SMURFIFY) {
             SmurfScreen { navController.popBackStack() }
+        }
+
+        // Smurf Gallery Screen
+        composable(NavRoutes.SMURF_GALLERY) {
+            SmurfGalleryScreen()
         }
         
         // Settings Content Screens

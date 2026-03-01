@@ -42,6 +42,7 @@
     <string name="permissions_content">Our Smurfify feature needs access to your camera so you can take a photo and transform yourself into a Smurf!\n\nWe use the photo only for the AI transformation and do not store it or share it with anyone.</string>
     <string name="button_open_settings">Open Settings</string>
     <string name="content_desc_back">Back</string>
+    <string name="smurf_gallery_title">Smurf Gallery</string>
 
     <!-- Network Error Strings -->
     <string name="no_internet_connection">No internet connection</string>

@@ -24,7 +24,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.math.min
 
 sealed class SmurfifyEvent {
@@ -33,7 +36,8 @@ sealed class SmurfifyEvent {
 
 @HiltViewModel
 class SmurfifyViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    @Named("smurfGallery") private val smurfGalleryDir: File
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SmurfifyUiState>(SmurfifyUiState.Idle)
@@ -68,6 +72,7 @@ class SmurfifyViewModel @Inject constructor(
                 if (img == null) {
                     throw Exception("Failed to generate image. Please try again.")
                 }
+                saveBitmap(img)
                 _uiState.value = SmurfifyUiState.Success(img)
 
             } catch (e: Exception) {
@@ -92,6 +97,13 @@ class SmurfifyViewModel @Inject constructor(
 
         val response = model.generateContent(prompt)
         return response.candidates.first().content.parts.filterIsInstance<ImagePart>().firstOrNull()?.image
+    }
+
+    private fun saveBitmap(bitmap: Bitmap) {
+        val file = File(smurfGalleryDir, "smurf_${System.currentTimeMillis()}.jpg")
+        FileOutputStream(file).use {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, it)
+        }
     }
 
     private fun Uri.toBitmap(context: Context): Bitmap {

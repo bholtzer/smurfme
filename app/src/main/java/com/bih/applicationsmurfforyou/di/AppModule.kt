@@ -14,5 +14,7 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun bindConnectivityObserver(connectivityObserver: NetworkConnectivityObserver): ConnectivityObserver
+    abstract fun bindConnectivityObserver(
+        networkConnectivityObserver: NetworkConnectivityObserver
+    ): ConnectivityObserver
 }
