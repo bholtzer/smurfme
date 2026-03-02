@@ -50,6 +50,8 @@ class SmurfifyViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<SmurfifyEvent>()
     val eventFlow: SharedFlow<SmurfifyEvent> = _eventFlow.asSharedFlow()
 
+    private var lastChosenUri: Uri? = null
+
     private val imagenModel = Firebase.ai(
         backend = GenerativeBackend.vertexAI("us-central1")
     ).imagenModel(
@@ -65,7 +67,17 @@ class SmurfifyViewModel @Inject constructor(
             _uiState.value = SmurfifyUiState.Idle
             return
         }
+        lastChosenUri = uri
+        processImage(uri)
+    }
 
+    fun onRefresh() {
+        lastChosenUri?.let {
+            processImage(it)
+        }
+    }
+
+    private fun processImage(uri: Uri) {
         viewModelScope.launch {
             try {
                 _uiState.value = SmurfifyUiState.Loading

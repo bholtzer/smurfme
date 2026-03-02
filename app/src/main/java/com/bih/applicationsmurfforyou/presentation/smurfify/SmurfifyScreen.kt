@@ -166,7 +166,7 @@ fun SmurfScreen(
                     isImageLoaded = uiState is SmurfifyUiState.Success,
                     onGalleryClick = { pickImage.launch("image/*") },
                     onCameraClick = { requestPermission.launch(Manifest.permission.CAMERA) },
-                    onRefreshClick = { viewModel.onImageChosen(Uri.EMPTY) }
+                    onRefreshClick = { viewModel.onRefresh() }
                 )
 
                 Spacer(modifier = Modifier.height(48.dp))

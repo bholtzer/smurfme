@@ -28,7 +28,7 @@ internal object ImagenModelConfiguration {
     // For Vertex AI use Firebase.ai(backend = GenerativeBackend.vertexAI())
     @OptIn(PublicPreviewAPI::class)
     val model = Firebase.ai(backend = GenerativeBackend.googleAI()).imagenModel(
-        modelName = "imagen-4.0-generate-001",
+        modelName = "imagen-3.0-generate-001",
 
         generationConfig = config,
         safetySettings = ImagenSafetySettings(
