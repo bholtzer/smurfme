@@ -2,18 +2,17 @@ package com.bih.applicationsmurfforyou.presentation.smurfify
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -137,14 +137,26 @@ fun SmurfScreen(
                         is SmurfifyUiState.Idle -> {
                             Text(stringResource(id = R.string.smurfify_prompt), style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
                         }
+
                         is SmurfifyUiState.Loading -> {
                             LoadingState(text = stringResource(id = R.string.smurfify_loading))
                         }
+
                         is SmurfifyUiState.Error -> {
                             ErrorMessage(message = state.message)
                         }
+
                         is SmurfifyUiState.Success -> {
-                            state.bitmap?.let { SmurfImage(it) }
+                            state.bitmap?.let {
+                                SmurfImage(bitmap = it, imageUri = state.imageUri) {
+                                    val shareIntent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_STREAM, state.imageUri)
+                                        type = "image/jpeg"
+                                    }
+                                    context.startActivity(Intent.createChooser(shareIntent, null))
+                                }
+                            }
                         }
                     }
                 }
@@ -193,11 +205,20 @@ fun ActionButtons(
 }
 
 @Composable
-fun SmurfImage(bitmap: Bitmap) {
+fun SmurfImage(bitmap: Bitmap, imageUri: Uri?, onShare: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp),
+            .padding(top = 16.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = {
+                        if (imageUri != null) {
+                            onShare()
+                        }
+                    }
+                )
+            },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         border = BorderStroke(4.dp, MaterialTheme.colorScheme.primary)
