@@ -3,8 +3,8 @@ package com.bih.applicationsmurfforyou.data.repository
 import android.util.Log
 import com.bih.applicationsmurfforyou.domain.model.Smurf
 import com.bih.applicationsmurfforyou.domain.repository.SmurfRepository
-import com.google.firebase.database.database
 import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton

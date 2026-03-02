@@ -73,7 +73,11 @@ fun SmurfScreen(
             viewModel.eventFlow.collect { event ->
                 when (event) {
                     is SmurfifyEvent.ShowAd -> {
-                        adManager?.showAd {}
+                        adManager?.showAd {
+                            // The image processing continues in the background.
+                            // We don't need to do anything here as the UI will update
+                            // automatically when uiState changes to Success.
+                        }
                     }
                 }
             }

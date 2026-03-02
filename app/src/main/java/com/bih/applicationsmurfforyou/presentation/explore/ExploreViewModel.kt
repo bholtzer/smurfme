@@ -1,9 +1,12 @@
 package com.bih.applicationsmurfforyou.presentation.explore
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bih.applicationsmurfforyou.data.util.ConnectivityObserver
 import com.bih.applicationsmurfforyou.domain.repository.SmurfRepository
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +29,8 @@ sealed class ExploreEvent {
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
     private val repository: SmurfRepository,
-    private val connectivityObserver: ConnectivityObserver
+    private val connectivityObserver: ConnectivityObserver,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
 
     private val _smurfUiState = MutableStateFlow(
@@ -58,6 +62,14 @@ class ExploreViewModel @Inject constructor(
             loadSmurfs(forceRefresh = false)
         }
         observeNetworkStatus()
+        logScreenView()
+    }
+
+    private fun logScreenView() {
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "Explore Screen")
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, "ExploreViewModel")
+        }
     }
 
     private fun observeNetworkStatus() {
@@ -80,6 +92,7 @@ class ExploreViewModel @Inject constructor(
         viewModelScope.launch {
             if (forceRefresh) {
                 _isRefreshing.value = true
+                analytics.logEvent("refresh_village") {}
             } else if (_smurfUiState.value !is SmurfUiState.Success) {
                 _smurfUiState.value = SmurfUiState.Loading
             }
@@ -93,6 +106,9 @@ class ExploreViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _smurfUiState.value = SmurfUiState.Error(e.message ?: "An unknown error occurred.")
+                analytics.logEvent("explore_error") {
+                    param("error_msg", e.message ?: "unknown")
+                }
             } finally {
                 if (forceRefresh) {
                     _isRefreshing.value = false
@@ -103,13 +119,22 @@ class ExploreViewModel @Inject constructor(
 
     fun toggleLayout() {
         _isGridLayout.update { !it }
+        analytics.logEvent("toggle_layout") {
+            param("layout_mode", if (_isGridLayout.value) "grid" else "list")
+        }
     }
 
     fun onSmurfClick(smurfName: String) {
         clickCount++
+        analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_NAME, smurfName)
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "smurf_character")
+        }
+
         if (clickCount >= trapThreshold) {
             clickCount = 0
             trapThreshold = Random.nextInt(1, 11)
+            analytics.logEvent("trap_triggered") {}
             viewModelScope.launch {
                 _eventFlow.emit(ExploreEvent.ShowGargamelTrap)
             }
@@ -118,5 +143,13 @@ class ExploreViewModel @Inject constructor(
                 _eventFlow.emit(ExploreEvent.NavigateToDetail(smurfName))
             }
         }
+    }
+    
+    fun onNavigateToSmurfify() {
+        analytics.logEvent("navigate_to_smurfify") {}
+    }
+
+    fun onNavigateToGallery() {
+        analytics.logEvent("navigate_to_gallery") {}
     }
 }

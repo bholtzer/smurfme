@@ -16,9 +16,10 @@ class SmurfRemoteDataSource(
         sourceBitmap: Bitmap
     ): Bitmap {
         val prompt = """
-            A photorealistic, high-detail smurf version of the person in this image. 
-            Preserve the facial features, expression, and any accessories like glasses or beards. 
-            The skin must be blue and they must be wearing a white smurf hat.
+            A whimsical, high-quality 3D animation style Smurf character. 
+            Transform the person in the image into a Smurf while preserving their unique facial features, expression, and distinct characteristics (like glasses, hair style, or facial hair). 
+            The character should have iconic blue skin, be wearing a classic white Phrygian-style Smurf hat and white trousers. 
+            The style should be consistent with modern animated feature films, with soft lighting and vibrant colors.
         """.trimIndent()
 
         val response = imagenModel.editImage(

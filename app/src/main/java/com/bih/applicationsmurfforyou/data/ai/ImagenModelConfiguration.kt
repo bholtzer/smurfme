@@ -1,5 +1,6 @@
 package com.bih.applicationsmurfforyou.data.ai
 
+
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
@@ -9,11 +10,7 @@ import com.google.firebase.ai.type.ImagenImageFormat
 import com.google.firebase.ai.type.ImagenPersonFilterLevel
 import com.google.firebase.ai.type.ImagenSafetyFilterLevel
 import com.google.firebase.ai.type.ImagenSafetySettings
-
-
 import com.google.firebase.ai.type.PublicPreviewAPI
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 internal object ImagenModelConfiguration {
     // [START android_imagen_model_configuration]

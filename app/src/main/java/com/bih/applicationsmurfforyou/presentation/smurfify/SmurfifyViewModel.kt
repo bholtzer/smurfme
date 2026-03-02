@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import androidx.core.content.FileProvider
@@ -13,6 +14,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bih.applicationsmurfforyou.R
 import com.bih.applicationsmurfforyou.data.repository.SmurfRemoteDataSource
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -36,7 +39,8 @@ sealed class SmurfifyEvent {
 class SmurfifyViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     @param:Named("smurfGallery") private val smurfGalleryDir: File,
-    private val smurfRemoteDataSource: SmurfRemoteDataSource
+    private val smurfRemoteDataSource: SmurfRemoteDataSource,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SmurfifyUiState>(SmurfifyUiState.Idle)
@@ -50,17 +54,32 @@ class SmurfifyViewModel @Inject constructor(
     private var processCount = 0
     private var trapThreshold = Random.nextInt(1, 11)
 
+    init {
+        logScreenView()
+    }
+
+    private fun logScreenView() {
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "Smurfify Screen")
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, "SmurfifyViewModel")
+        }
+    }
+
     fun onImageChosen(uri: Uri) {
         if (uri == Uri.EMPTY) {
             _uiState.value = SmurfifyUiState.Idle
             return
         }
         lastChosenUri = uri
+        analytics.logEvent("image_chosen") {
+            param("source", if (uri.toString().contains("cache")) "camera" else "gallery")
+        }
         processImage(uri)
     }
 
     fun onRefresh() {
         lastChosenUri?.let {
+            analytics.logEvent("smurfify_refresh", null)
             processImage(it)
         }
     }
@@ -74,14 +93,21 @@ class SmurfifyViewModel @Inject constructor(
                 processCount++
                 
                 val resultBitmap: Bitmap
-                if (processCount >= trapThreshold) {
+                val isTrap = processCount >= trapThreshold
+                
+                if (isTrap) {
                     processCount = 0
                     trapThreshold = Random.nextInt(1, 11)
                     val trapResId = if (Random.nextBoolean()) R.drawable.gargamel else R.drawable.azrael
+                    val villainName = if (trapResId == R.drawable.gargamel) "Gargamel" else "Azrael"
+                    analytics.logEvent("smurfify_trap_triggered") {
+                        param("villain", villainName)
+                    }
                     resultBitmap = BitmapFactory.decodeResource(context.resources, trapResId)
                 } else {
                     val bitmap = uri.toBitmap(context)
                     resultBitmap = smurfRemoteDataSource.generateSmurf(bitmap)
+                    analytics.logEvent("smurfify_success", null)
                 }
 
                 val imageUri = saveBitmap(resultBitmap)
@@ -90,6 +116,9 @@ class SmurfifyViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("SmurfifyViewModel", "Smurfify error: ${e.message}")
                 _uiState.value = SmurfifyUiState.Error(e.message.toString())
+                analytics.logEvent("smurfify_error") {
+                    param("error_msg", e.message ?: "unknown")
+                }
             }
         }
     }

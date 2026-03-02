@@ -6,6 +6,8 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +22,8 @@ import javax.inject.Named
 @HiltViewModel
 class SmurfGalleryViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    @Named("smurfGallery") private val smurfGalleryDir: File
+    @Named("smurfGallery") private val smurfGalleryDir: File,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
 
     private val _images = MutableStateFlow<List<String>>(emptyList())
@@ -37,6 +40,14 @@ class SmurfGalleryViewModel @Inject constructor(
 
     init {
         loadImages()
+        logScreenView()
+    }
+
+    private fun logScreenView() {
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "Smurf Gallery")
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, "SmurfGalleryViewModel")
+        }
     }
 
     private fun loadImages() {
@@ -52,12 +63,18 @@ class SmurfGalleryViewModel @Inject constructor(
 
     fun toggleLayout() {
         _isGridLayout.update { !it }
+        analytics.logEvent("gallery_toggle_layout") {
+            param("layout_mode", if (_isGridLayout.value) "grid" else "list")
+        }
     }
 
     fun toggleSelectionMode() {
         _isSelectionMode.update { !it }
         if (!_isSelectionMode.value) {
             _selectedImages.value = emptySet()
+        }
+        analytics.logEvent("gallery_toggle_selection") {
+            param("enabled", _isSelectionMode.value.toString())
         }
     }
 
@@ -70,6 +87,10 @@ class SmurfGalleryViewModel @Inject constructor(
     fun shareSelectedImages() {
         val selected = _selectedImages.value
         if (selected.isEmpty()) return
+
+        analytics.logEvent("gallery_share_multiple") {
+            param("count", selected.size.toLong())
+        }
 
         val uris = ArrayList<Uri>()
         selected.forEach { path ->
@@ -100,6 +121,7 @@ class SmurfGalleryViewModel @Inject constructor(
     }
 
     fun shareImage(imagePath: String) {
+        analytics.logEvent("gallery_share_single", null)
         val file = File(imagePath)
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
         val intent = Intent(Intent.ACTION_SEND).apply {
@@ -110,5 +132,13 @@ class SmurfGalleryViewModel @Inject constructor(
         val chooser = Intent.createChooser(intent, "Share Smurf Image")
         chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(chooser)
+    }
+    
+    fun deleteImage(imagePath: String) {
+        val file = File(imagePath)
+        if (file.exists() && file.delete()) {
+            analytics.logEvent("gallery_delete_image", null)
+            loadImages()
+        }
     }
 }

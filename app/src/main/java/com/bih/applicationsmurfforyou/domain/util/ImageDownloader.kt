@@ -3,10 +3,6 @@ package com.bih.applicationsmurfforyou.domain.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.bih.applicationsmurfforyou.data.ai.ImagenModelConfiguration.model
-import com.google.firebase.ai.type.ImagenInlineImage
-import com.google.firebase.ai.type.PublicPreviewAPI
-import com.google.firebase.ai.type.asImageOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
