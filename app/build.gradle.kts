@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.firebase.storage.ktx)
     implementation(libs.firebase.database.ktx)
     implementation(libs.google.firebase.appcheck.playintegrity)
+    debugImplementation(libs.google.firebase.appcheck.debug)
     implementation(libs.firebase.crashlytics.buildtools)
 
 
