@@ -1,6 +1,7 @@
 package com.bih.applicationsmurfforyou.presentation.explore
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -59,6 +60,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -94,8 +96,23 @@ fun ExploreScreen(
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val networkStatus by viewModel.networkStatus.collectAsState()
     var smurfs by remember { mutableStateOf<List<Smurf>>(emptyList()) }
+    
+    var showTrapOverlay by remember { mutableStateOf(false) }
+    var isShrunk by remember { mutableStateOf(false) }
+    val listScale by animateFloatAsState(targetValue = if (isShrunk) 0.5f else 1.0f, label = "ListScale")
 
-    // Persist the list of smurfs across refreshes
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is ExploreEvent.NavigateToDetail -> onSmurfClick(event.smurfName)
+                is ExploreEvent.ShowGargamelTrap -> {
+                    showTrapOverlay = true
+                    isShrunk = true
+                }
+            }
+        }
+    }
+
     LaunchedEffect(smurfUiState) {
         if (smurfUiState is SmurfUiState.Success) {
             smurfs = (smurfUiState as SmurfUiState.Success).smurfs
@@ -185,6 +202,10 @@ fun ExploreScreen(
                     Box(
                         modifier = Modifier
                             .weight(1f)
+                            .graphicsLayer {
+                                scaleX = listScale
+                                scaleY = listScale
+                            }
                             .nestedScroll(pullRefreshState.nestedScrollConnection)
                     ) {
                         if (smurfs.isNotEmpty()) {
@@ -198,7 +219,7 @@ fun ExploreScreen(
                                 ) {
                                     items(smurfs) { character ->
                                         SmurfCharacterCard(character = character, isOnline = networkStatus == ConnectivityObserver.Status.Available) {
-                                            character.name?.let { onSmurfClick(it) }
+                                            viewModel.onSmurfClick(character.name ?: "")
                                         }
                                     }
                                 }
@@ -210,7 +231,7 @@ fun ExploreScreen(
                                 ) {
                                     items(smurfs) { character ->
                                         SmurfCharacterListItem(character = character, isOnline = networkStatus == ConnectivityObserver.Status.Available) {
-                                            character.name?.let { onSmurfClick(it) }
+                                            viewModel.onSmurfClick(character.name ?: "")
                                         }
                                     }
                                 }
@@ -261,6 +282,33 @@ fun ExploreScreen(
                     Spacer(modifier = Modifier.height(30.dp))
                 }
 
+                if (showTrapOverlay) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.8f))
+                            .clickable { 
+                                showTrapOverlay = false 
+                                isShrunk = false
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val trapImage = if (Random.nextBoolean()) R.drawable.gargamel else R.drawable.azrael
+                        Image(
+                            painter = painterResource(id = trapImage),
+                            contentDescription = "Gargamel Trap",
+                            modifier = Modifier.size(300.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                        Text(
+                            text = "IT'S A TRAP!",
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = Color.Red,
+                            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 64.dp)
+                        )
+                    }
+                }
+
                 AnimatedVisibility(
                     visible = networkStatus != ConnectivityObserver.Status.Available,
                     enter = slideInVertically(initialOffsetY = { it }),
@@ -289,7 +337,7 @@ fun GargamelError(message: String, showOverlay: Boolean) {
         try {
             if (Random.nextBoolean()) R.drawable.gargamel else R.drawable.azrael
         } catch (e: Exception) {
-            R.drawable.gargamel // Fallback to gargamel if azrael is missing
+            R.drawable.gargamel
         }
     }
     val backgroundModifier = if (showOverlay) {

@@ -2,6 +2,7 @@ package com.bih.applicationsmurfforyou.presentation.smurfify
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -10,15 +11,8 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Firebase
-import com.google.firebase.ai.ai
-import com.google.firebase.ai.type.GenerativeBackend
-import com.google.firebase.ai.type.ImagenPersonFilterLevel
-import com.google.firebase.ai.type.ImagenRawImage
-import com.google.firebase.ai.type.ImagenSafetyFilterLevel
-import com.google.firebase.ai.type.ImagenSafetySettings
-import com.google.firebase.ai.type.PublicPreviewAPI
-import com.google.firebase.ai.type.toImagenInlineImage
+import com.bih.applicationsmurfforyou.R
+import com.bih.applicationsmurfforyou.data.repository.SmurfRemoteDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,16 +26,17 @@ import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.random.Random
 
 sealed class SmurfifyEvent {
     object ShowAd : SmurfifyEvent()
 }
 
-@OptIn(PublicPreviewAPI::class)
 @HiltViewModel
 class SmurfifyViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    @param:Named("smurfGallery") private val smurfGalleryDir: File
+    @param:Named("smurfGallery") private val smurfGalleryDir: File,
+    private val smurfRemoteDataSource: SmurfRemoteDataSource
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SmurfifyUiState>(SmurfifyUiState.Idle)
@@ -51,16 +46,9 @@ class SmurfifyViewModel @Inject constructor(
     val eventFlow: SharedFlow<SmurfifyEvent> = _eventFlow.asSharedFlow()
 
     private var lastChosenUri: Uri? = null
-
-    private val imagenModel = Firebase.ai(
-        backend = GenerativeBackend.vertexAI("us-central1")
-    ).imagenModel(
-        modelName = "imagen-3.0-capability-001",
-        safetySettings = ImagenSafetySettings(
-            safetyFilterLevel = ImagenSafetyFilterLevel.BLOCK_LOW_AND_ABOVE,
-            personFilterLevel = ImagenPersonFilterLevel.ALLOW_ALL
-        )
-    )
+    
+    private var processCount = 0
+    private var trapThreshold = Random.nextInt(1, 11)
 
     fun onImageChosen(uri: Uri) {
         if (uri == Uri.EMPTY) {
@@ -83,34 +71,21 @@ class SmurfifyViewModel @Inject constructor(
                 _uiState.value = SmurfifyUiState.Loading
                 _eventFlow.emit(SmurfifyEvent.ShowAd)
 
-                val bitmap = uri.toBitmap(context)
-
-
-                val prompt = """Create a 3D animated movie-style image. The scene is a whimsical Smurf village with large, colorful mushroom houses under a bright, cheerful sky.
+                processCount++
                 
-                In the center of the scene is a single Smurf character. This character is short, stout, has smooth, solid blue skin, and is wearing the classic Smurf outfit: a large, white, floppy hat and white trousers.
-                
-                **CRITICAL INSTRUCTION:**
-                The face of this Smurf **MUST** be a recognizable, stylized caricature of the person from the reference image.
-                - **Preserve:** The core structure of their smile, nose, and jawline.
-                - **Adapt:** Their features into a cute, 3D animated style. Their eyes should be large and expressive but retain the original person's general shape and position.
-                - **Do Not:** Simply paste the real face onto the Smurf body. It must be a cohesive, artistic transformation.
-                
-                The final image must feel like a real Smurf that just happens to look like the person in the photo.
-                """
+                val resultBitmap: Bitmap
+                if (processCount >= trapThreshold) {
+                    processCount = 0
+                    trapThreshold = Random.nextInt(1, 11)
+                    val trapResId = if (Random.nextBoolean()) R.drawable.gargamel else R.drawable.azrael
+                    resultBitmap = BitmapFactory.decodeResource(context.resources, trapResId)
+                } else {
+                    val bitmap = uri.toBitmap(context)
+                    resultBitmap = smurfRemoteDataSource.generateSmurf(bitmap)
+                }
 
-
-
-                val response = imagenModel.editImage(
-                    prompt = prompt,
-                    referenceImages = listOf(ImagenRawImage(bitmap.toImagenInlineImage()))
-                )
-
-                val imageBitmap = response.images.firstOrNull()?.asBitmap()
-                    ?: throw IllegalStateException("No image returned from model")
-
-                val imageUri = saveBitmap(imageBitmap)
-                _uiState.value = SmurfifyUiState.Success(imageBitmap, imageUri)
+                val imageUri = saveBitmap(resultBitmap)
+                _uiState.value = SmurfifyUiState.Success(resultBitmap, imageUri)
 
             } catch (e: Exception) {
                 Log.e("SmurfifyViewModel", "Smurfify error: ${e.message}")

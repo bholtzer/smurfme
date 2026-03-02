@@ -5,6 +5,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.ai.ImagenModel
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.ImagenPersonFilterLevel
+import com.google.firebase.ai.type.ImagenSafetyFilterLevel
+import com.google.firebase.ai.type.ImagenSafetySettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,14 +23,20 @@ object SmurfRemoteModule {
     fun provideImagenModel(): ImagenModel {
         return Firebase.ai(
             backend = GenerativeBackend.vertexAI("us-central1")
-        ).imagenModel("imagen-3.0-capability-001")
+        ).imagenModel(
+            modelName = "imagen-3.0-capability-001",
+            safetySettings = ImagenSafetySettings(
+                safetyFilterLevel = ImagenSafetyFilterLevel.BLOCK_LOW_AND_ABOVE,
+                personFilterLevel = ImagenPersonFilterLevel.ALLOW_ALL
+            )
+        )
     }
 
-   /* @Provides
+    @Provides
     @Singleton
     fun provideSmurfRemoteDataSource(
         imagenModel: ImagenModel
     ): SmurfRemoteDataSource {
         return SmurfRemoteDataSource(imagenModel)
-    }*/
+    }
 }

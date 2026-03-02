@@ -5,14 +5,23 @@ import androidx.lifecycle.viewModelScope
 import com.bih.applicationsmurfforyou.data.util.ConnectivityObserver
 import com.bih.applicationsmurfforyou.domain.repository.SmurfRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
+
+sealed class ExploreEvent {
+    data class NavigateToDetail(val smurfName: String) : ExploreEvent()
+    object ShowGargamelTrap : ExploreEvent()
+}
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
@@ -20,7 +29,6 @@ class ExploreViewModel @Inject constructor(
     private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
-    // Correctly set the initial state based on a synchronous network check.
     private val _smurfUiState = MutableStateFlow(
         if (connectivityObserver.isNetworkAvailable()) SmurfUiState.Loading
         else SmurfUiState.Error("No internet connection.")
@@ -39,12 +47,16 @@ class ExploreViewModel @Inject constructor(
     )
     val networkStatus: StateFlow<ConnectivityObserver.Status> = _networkStatus.asStateFlow()
 
+    private val _eventFlow = MutableSharedFlow<ExploreEvent>()
+    val eventFlow: SharedFlow<ExploreEvent> = _eventFlow.asSharedFlow()
+
+    private var clickCount = 0
+    private var trapThreshold = Random.nextInt(1, 11)
+
     init {
-        // Only attempt to load if we are starting online.
         if (connectivityObserver.isNetworkAvailable()) {
             loadSmurfs(forceRefresh = false)
         }
-        // Observe for future network changes.
         observeNetworkStatus()
     }
 
@@ -52,7 +64,6 @@ class ExploreViewModel @Inject constructor(
         connectivityObserver.observe().onEach { status ->
             val oldStatus = _networkStatus.value
             _networkStatus.value = status
-            // When network becomes available, and we were previously in an error state, load the data.
             if (status == ConnectivityObserver.Status.Available && oldStatus != ConnectivityObserver.Status.Available) {
                 loadSmurfs(forceRefresh = false)
             }
@@ -92,5 +103,20 @@ class ExploreViewModel @Inject constructor(
 
     fun toggleLayout() {
         _isGridLayout.update { !it }
+    }
+
+    fun onSmurfClick(smurfName: String) {
+        clickCount++
+        if (clickCount >= trapThreshold) {
+            clickCount = 0
+            trapThreshold = Random.nextInt(1, 11)
+            viewModelScope.launch {
+                _eventFlow.emit(ExploreEvent.ShowGargamelTrap)
+            }
+        } else {
+            viewModelScope.launch {
+                _eventFlow.emit(ExploreEvent.NavigateToDetail(smurfName))
+            }
+        }
     }
 }
