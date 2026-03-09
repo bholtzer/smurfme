@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.speech.tts.TextToSpeech
+import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
@@ -33,24 +35,24 @@ object Utils {
         }
     }
 
-    fun downloadImageToFile(context: Context, imageUrl: String): File {
+    fun downloadImageToFile(context: Context, image: String): File {
         val file = File(context.cacheDir, "input_image.png")
 
-        if (imageUrl.startsWith("content://")) {
+        if (image.startsWith("content://")) {
             // Handle content:// URIs
-            val uri = imageUrl.toUri()
+            val uri = image.toUri()
             context.contentResolver.openInputStream(uri)?.use { input ->
                 file.outputStream().use { output ->
                     input.copyTo(output)
                 }
             } ?: throw IOException("Failed to open content URI")
-        } else if (imageUrl.startsWith("file://")) {
+        } else if (image.startsWith("file://")) {
             // Handle local file:// URIs
-            val uri = imageUrl.toUri()
+            val uri = image.toUri()
             File(uri.path!!).copyTo(file, overwrite = true)
         } else {
             // Handle HTTP/HTTPS
-            val request = Request.Builder().url(imageUrl).build()
+            val request = Request.Builder().url(image).build()
             OkHttpClient().newCall(request).execute().use { response ->
                 if (!response.isSuccessful) throw IOException("Failed to download image")
                 response.body?.byteStream()?.use { input ->
@@ -72,9 +74,9 @@ object Utils {
         return outFile
     }
 
-    fun downloadImageToFileOld(context: Context, imageUrl: String): File {
+    fun downloadImageToFileOld(context: Context, image: String): File {
         val file = File(context.cacheDir, "input_image.png")
-        val request = Request.Builder().url(imageUrl).build()
+        val request = Request.Builder().url(image).build()
         OkHttpClient().newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Failed to download image")
             file.outputStream().use { output ->
@@ -84,6 +86,7 @@ object Utils {
         return file
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     fun downscale(context: Context, uri: Uri, maxDim: Int = 1280): File {
         val source = ImageDecoder.createSource(context.contentResolver, uri)
         val bitmap = ImageDecoder.decodeBitmap(source)

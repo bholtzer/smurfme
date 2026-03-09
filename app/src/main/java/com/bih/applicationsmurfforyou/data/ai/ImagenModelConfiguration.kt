@@ -21,11 +21,10 @@ internal object ImagenModelConfiguration {
         imageFormat = ImagenImageFormat.jpeg(compressionQuality = 100),
         )
 
-    // Initialize the Gemini Developer API backend service
-    // For Vertex AI use Firebase.ai(backend = GenerativeBackend.vertexAI())
+    // Using Vertex AI backend as it supports the 'capability' models and specific regions
     @OptIn(PublicPreviewAPI::class)
-    val model = Firebase.ai(backend = GenerativeBackend.googleAI()).imagenModel(
-        modelName = "imagen-3.0-generate-001",
+    val model = Firebase.ai(backend = GenerativeBackend.vertexAI("us-central1")).imagenModel(
+        modelName = "imagen-3.0-capability-001",
 
         generationConfig = config,
         safetySettings = ImagenSafetySettings(

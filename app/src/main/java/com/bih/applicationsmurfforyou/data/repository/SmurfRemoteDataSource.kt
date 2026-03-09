@@ -13,15 +13,9 @@ class SmurfRemoteDataSource(
 
     @OptIn(PublicPreviewAPI::class)
     suspend fun generateSmurf(
-        sourceBitmap: Bitmap
+        sourceBitmap: Bitmap,
+        prompt: String
     ): Bitmap {
-        val prompt = """
-            A whimsical, high-quality 3D animation style Smurf character. 
-            Transform the person in the image into a Smurf while preserving their unique facial features, expression, and distinct characteristics (like glasses, hair style, or facial hair). 
-            The character should have iconic blue skin, be wearing a classic white Phrygian-style Smurf hat and white trousers. 
-            The style should be consistent with modern animated feature films, with soft lighting and vibrant colors.
-        """.trimIndent()
-
         val response = imagenModel.editImage(
             prompt = prompt,
             referenceImages = listOf(

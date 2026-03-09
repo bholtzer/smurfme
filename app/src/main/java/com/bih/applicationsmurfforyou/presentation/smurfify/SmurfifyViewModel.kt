@@ -79,7 +79,7 @@ class SmurfifyViewModel @Inject constructor(
 
     fun onRefresh() {
         lastChosenUri?.let {
-            analytics.logEvent("smurfify_refresh", null)
+            analytics.logEvent("Smurfify_refresh", null)
             processImage(it)
         }
     }
@@ -92,22 +92,62 @@ class SmurfifyViewModel @Inject constructor(
 
                 processCount++
                 
+                val originalBitmap = uri.toBitmap(context)
+                // Ensure the bitmap has even dimensions to avoid size mismatch with internal mask generation
+                val bitmap = if (originalBitmap.width % 2 != 0 || originalBitmap.height % 2 != 0) {
+                    val newWidth = originalBitmap.width - (originalBitmap.width % 2)
+                    val newHeight = originalBitmap.height - (originalBitmap.height % 2)
+                    Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
+                } else {
+                    originalBitmap
+                }
+
                 val resultBitmap: Bitmap
                 val isTrap = processCount >= trapThreshold
                 
                 if (isTrap) {
+                    // Reset trap logic
                     processCount = 0
                     trapThreshold = Random.nextInt(1, 11)
-                    val trapResId = if (Random.nextBoolean()) R.drawable.gargamel else R.drawable.azrael
-                    val villainName = if (trapResId == R.drawable.gargamel) "Gargamel" else "Azrael"
-                    analytics.logEvent("smurfify_trap_triggered") {
+                    
+                    // Randomly choose between Gargamel and Azrael
+                    val isGargamel = Random.nextBoolean()
+                    val villainName = if (isGargamel) "Gargamel" else "Azrael"
+                    
+                    analytics.logEvent("Smurfify_trap_triggered") {
                         param("villain", villainName)
                     }
-                    resultBitmap = BitmapFactory.decodeResource(context.resources, trapResId)
+
+                    val trapPrompt = if (isGargamel) {
+                        """
+                            A 2D cartoon caricature in the classic 'ligne claire' style of Peyo. 
+                            Transform the person in the image into Gargamel, the wicked wizard from the Smurfs. 
+                            Features: a large hooked nose, a balding head with scruffy black hair on the sides, and a tattered black wizard robe with visible patches. 
+                            Preserve the person's original facial expression, glasses, and recognizable features while adapting them to Gargamel's iconic look. 
+                            Use bold black outlines, flat vibrant colors, and a clean hand-drawn comic book aesthetic.
+                        """.trimIndent()
+                    } else {
+                        """
+                            A 2D cartoon illustration in the classic 'ligne claire' style of Peyo. 
+                            Transform the person in the image into Azrael, the scruffy orange tabby cat from the Smurfs. 
+                            The cat should have a cunning, mischievous expression that mirrors the person's original face. 
+                            Features: scruffy orange fur, a notched ear, and the person's recognizable traits (like glasses if present) translated onto the cat character. 
+                            Use bold black outlines, vibrant flat colors, and a high-quality hand-drawn comic book style.
+                        """.trimIndent()
+                    }
+
+                    resultBitmap = smurfRemoteDataSource.generateSmurf(bitmap, trapPrompt)
                 } else {
-                    val bitmap = uri.toBitmap(context)
-                    resultBitmap = smurfRemoteDataSource.generateSmurf(bitmap)
-                    analytics.logEvent("smurfify_success", null)
+                    val peyoSmurfPrompt = """
+                        A 2D cartoon caricature in the classic 'ligne claire' style of Peyo. 
+                        Transform the subject in the photo into a cute Smurf character with vibrant blue skin and a large white floppy Phrygian-style Smurf hat. 
+                        Meticulously preserve the person's unique facial features, expression, and distinct characteristics (like glasses, hairstyle, or facial hair) so they are instantly recognizable. 
+                        The character should be wearing classic white Smurf trousers. 
+                        The final result must look like a clean, high-quality, vibrant comic book illustration with bold black outlines and simple, effective shading, staying perfectly true to the beloved aesthetic of the original Smurfs cartoons.
+                    """.trimIndent()
+
+                    resultBitmap = smurfRemoteDataSource.generateSmurf(bitmap, peyoSmurfPrompt)
+                    analytics.logEvent("Smurfify_success", null)
                 }
 
                 val imageUri = saveBitmap(resultBitmap)
@@ -116,7 +156,7 @@ class SmurfifyViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("SmurfifyViewModel", "Smurfify error: ${e.message}")
                 _uiState.value = SmurfifyUiState.Error(e.message.toString())
-                analytics.logEvent("smurfify_error") {
+                analytics.logEvent("Smurfify_error") {
                     param("error_msg", e.message ?: "unknown")
                 }
             }

@@ -1,0 +1,299 @@
+{
+  "smurfs": [
+    {
+      "name": "Actor Smurf",
+      "description": "Actor Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FActor_smurf.png?alt=media"
+    },
+    {
+      "name": "Alchemist Smurf",
+      "description": "Alchemist Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FAlchemist_smurf.png?alt=media"
+    },
+    {
+      "name": "Archeologist Smurf",
+      "description": "Archeologist Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FArcheologist_smurf.png?alt=media"
+    },
+    {
+      "name": "Architect Cartoon Smurf",
+      "description": "Architect Cartoon Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FArchitect_Cartoon_smurf.png?alt=media"
+    },
+    {
+      "name": "Architect Smurf",
+      "description": "Architect Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FArchitect_smurf.png?alt=media"
+    },
+    {
+      "name": "Astro Smurf",
+      "description": "Astro Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FAstro_smurf.png?alt=media"
+    },
+    {
+      "name": "Baby Smurf",
+      "description": "Baby Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FBaby_smurf.png?alt=media"
+    },
+    {
+      "name": "Barbero Smurf",
+      "description": "Barbero Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FBarbero_smurf.png?alt=media"
+    },
+    {
+      "name": "Blacksmith Smurf",
+      "description": "Blacksmith Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FBlacksmith_smurf.jpg?alt=media"
+    },
+    {
+      "name": "Blossom Smurf",
+      "description": "Blossom Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FBlossom_smurf.png?alt=media"
+    },
+    {
+      "name": "Blue Painter Smurf",
+      "description": "Blue Painter Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FBlue_Painter_smurf.png?alt=media"
+    },
+    {
+      "name": "Brainy Smurf",
+      "description": "Brainy Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FBrainy_smurf.png?alt=media"
+    },
+    {
+      "name": "Builder Smurf",
+      "description": "Builder Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FBuilder_smurf.png?alt=media"
+    },
+    {
+      "name": "Butterfly Smurf",
+      "description": "Butterfly Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FButtErfly_smurf.png?alt=media"
+    },
+    {
+      "name": "Camper Smurf",
+      "description": "Camper Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCamper_smurf.png?alt=media"
+    },
+    {
+      "name": "Campero Smurf",
+      "description": "Campero Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCampero_smurf.png?alt=media"
+    },
+    {
+      "name": "Carbonero Smurf",
+      "description": "Carbonero Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCarbonero_smurf.png?alt=media"
+    },
+    {
+      "name": "Carpenter Smurf",
+      "description": "Carpenter Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCarpenter_smurf.png?alt=media"
+    },
+    {
+      "name": "Caveman Smurf",
+      "description": "Caveman Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCaveman_smurf.png?alt=media"
+    },
+    {
+      "name": "Chefcomic Smurf",
+      "description": "Chefcomic Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FChefComic_smurf.png?alt=media"
+    },
+    {
+      "name": "Cherry Smurf",
+      "description": "Cherry Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCherry_smurf.png?alt=media"
+    },
+    {
+      "name": "Chimpy And Clumsy Smurf",
+      "description": "Chimpy And Clumsy Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FChimpy_And_Clumsy_smurf.png?alt=media"
+    },
+    {
+      "name": "Clockwork Smurf Comic Book Smurf",
+      "description": "Clockwork Smurf Comic Book Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FClockwork_Smurf_Comic_Book_smurf.png?alt=media"
+    },
+    {
+      "name": "Clockwork Smurfette Cartoon Smurf",
+      "description": "Clockwork Smurfette Cartoon Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FClockwork_Smurfette_Cartoon_smurf.png?alt=media"
+    },
+    {
+      "name": "Clueless Smurf",
+      "description": "Clueless Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FClueless_smurf.PNG?alt=media"
+    },
+    {
+      "name": "Clumsy Smurf",
+      "description": "Clumsy Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FClumsy_smurf.png?alt=media"
+    },
+    {
+      "name": "Cobbler Smurf",
+      "description": "Cobbler Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCobbler_smurf.png?alt=media"
+    },
+    {
+      "name": "Cousin Smurf",
+      "description": "Cousin Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCousin_smurf.png?alt=media"
+    },
+    {
+      "name": "Cowboy Smurf Icon Smurf",
+      "description": "Cowboy Smurf Icon Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCowboy_smurf_icon_smurf.png?alt=media"
+    },
+    {
+      "name": "Cupidon Smurf",
+      "description": "Cupidon Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCupidon_smurf.png?alt=media"
+    },
+    {
+      "name": "Currentbaker Smurf",
+      "description": "Currentbaker Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FCurrentBaker_smurf.png?alt=media"
+    },
+    {
+      "name": "Dancer Smurf Smurfs Village Smurf",
+      "description": "Dancer Smurf Smurfs Village Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDancer_Smurf_Smurfs_Village_smurf.png?alt=media"
+    },
+    {
+      "name": "Dentist Smurf",
+      "description": "Dentist Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDentist_smurf.png?alt=media"
+    },
+    {
+      "name": "Detective Smurf",
+      "description": "Detective Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDetective_smurf.png?alt=media"
+    },
+    {
+      "name": "Diaper Daddy Smurf",
+      "description": "Diaper Daddy Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDiaper_Daddy_smurf.png?alt=media"
+    },
+    {
+      "name": "Disabled Smurf",
+      "description": "Disabled Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDisabled_smurf.png?alt=media"
+    },
+    {
+      "name": "Doctorsmurfclipart Smurf",
+      "description": "Doctorsmurfclipart Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDoctorSmurfClipart_smurf.png?alt=media"
+    },
+    {
+      "name": "Don Smurfo Cartoon Smurf",
+      "description": "Don Smurfo Cartoon Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDon_Smurfo_Cartoon_smurf.png?alt=media"
+    },
+    {
+      "name": "Dopey4 Smurf",
+      "description": "Dopey4 Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDopey4_smurf.png?alt=media"
+    },
+    {
+      "name": "Dr Smurf",
+      "description": "Dr Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDr_smurf.png?alt=media"
+    },
+    {
+      "name": "Dreamycomics Smurf",
+      "description": "Dreamycomics Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDreamyComics_smurf.png?alt=media"
+    },
+    {
+      "name": "Dreamy Smurf Comic Smurf",
+      "description": "Dreamy Smurf Comic Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDreamy_Smurf_Comic_smurf.png?alt=media"
+    },
+    {
+      "name": "Drummer Smurf",
+      "description": "Drummer Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FDrummer_smurf.png?alt=media"
+    },
+    {
+      "name": "Fake Clockwork Smurf",
+      "description": "Fake Clockwork Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FFake_Clockwork__smurf.png?alt=media"
+    },
+    {
+      "name": "Hefty Smurf",
+      "description": "Hefty Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FHefty_Smurf.png?alt=media"
+    },
+    {
+      "name": "Koksmurf Smurf",
+      "description": "Koksmurf Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FKoksmurf_smurf.png?alt=media"
+    },
+    {
+      "name": "Lily Smurf",
+      "description": "Lily Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FLily_smurf.png?alt=media"
+    },
+    {
+      "name": "Papa Smurf",
+      "description": "Papa Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FPapa_smurf.png?alt=media"
+    },
+    {
+      "name": "Smurfye Smurf",
+      "description": "Smurfye Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FSmurfYe_smurf.png?alt=media"
+    },
+    {
+      "name": "Smurf Dentist Smurf",
+      "description": "Smurf Dentist Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FSmurf_Dentist_smurf.png?alt=media"
+    },
+    {
+      "name": "Smurfbegonia Comics Smurf",
+      "description": "Smurfbegonia Comics Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FSmurfbegonia_comics_smurf.png?alt=media"
+    },
+    {
+      "name": "Smurfblossom Smurf",
+      "description": "Smurfblossom Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FSmurfblossom_smurf.png?alt=media"
+    },
+    {
+      "name": "Smurfette 2 Smurf",
+      "description": "Smurfette 2 Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FSmurfette_2_smurf.png?alt=media"
+    },
+    {
+      "name": "Smurfs-Village Smurf",
+      "description": "Smurfs-Village Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FSmurfs-Village_smurf.png?alt=media"
+    },
+    {
+      "name": "Storm Smurf",
+      "description": "Storm Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2FStorm_smurf.png?alt=media"
+    },
+    {
+      "name": "Grouchy Large Smurf",
+      "description": "Grouchy Large Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fgrouchy_large_smurf.png?alt=media"
+    },
+    {
+      "name": "Harmony Smurf",
+      "description": "Harmony Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fharmony_smurf.png?alt=media"
+    },
+    {
+      "name": "Sasmurfylife Smurf",
+      "description": "Sasmurfylife Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fsasmurfylife_smurf.png?alt=media"
+    },
+    {
+      "name": "Soccer Smurf",
+      "description": "Soccer Smurf is one of the unique Smurfs with a special role.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/applicationsmurfforyou.firebasestorage.app/o/smurfs%2Fsoccer_smurf.png?alt=media"
+    }
+  ]
+}
